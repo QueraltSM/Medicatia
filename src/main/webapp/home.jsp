@@ -1,9 +1,3 @@
-<%-- 
-    Document   : homex
-    Created on : 15-abr-2020, 20:46:21
-    Author     : QSM
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -91,7 +85,6 @@
 
             </div>
             <!-- /Header -->
-
             <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
@@ -109,22 +102,22 @@
                            <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending">Pending</a></li>
                                 </ul>
                            </li>
                            <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
                                 </ul>
                            </li>
                            <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
                                 </ul>
                            </li>
                            <li id="administrators_menu_section">
@@ -145,7 +138,6 @@
                 </div>
             </div>
             <!-- /Sidebar -->
-
             <!-- Page Wrapper -->
             <div class="page-wrapper">
 
@@ -218,7 +210,7 @@
                         </div>
                         <div class="col-xl-3 col-sm-6 col-12" id="appointments_section">
                             <div class="card">
-                                <a href="appointments.jsp" style="color:black;"><div class="card-body" >
+                                <a href="myappointments.jsp?state=accepted" style="color:black;"><div class="card-body" >
                                         <div class="dash-widget-header">
                                             <span class="dash-widget-icon text-warning border-warning">
                                                 <i class="fe fe-users"></i>
