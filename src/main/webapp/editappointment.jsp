@@ -28,7 +28,7 @@
                 <script src="assets/js/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body onload="resetAppointmentForm()">
+    <body onload="resetEditAppointmentForm()">
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -89,7 +89,7 @@
 
             </div>
             <!-- /Header -->
-                      <!-- Sidebar -->
+                               <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -149,7 +149,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="page-title">Request an appointment</h3>
+                                <h3 class="page-title">Update an appointment</h3>
                             </div>
                         </div>
                     </div>
@@ -165,15 +165,21 @@
                                     <form onsubmit="checkAvailability();
                                             return false">
                                         <div class="form-group row">
+                                            <label class="col-lg-3 col-form-label">Patient</label>
+                                            <div class="col-lg-9">
+                                                <label id="patient_name"></label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label class="col-lg-3 col-form-label">Date</label>
                                             <div class="col-lg-9">
-                                                <input type="text" placeholder="Pick a date" class="form-control" id="datepicker" required>
+                                                <input type="text" class="form-control" id="datepicker" required>
                                             </div>
                                         </div>
                                         <div class="form-group row" id="Rol">
                                             <label class="col-lg-3 col-form-label">Type</label>
                                             <div class="col-lg-9">
-                                                <select class="select" id="appointment_subtype">
+                                                <select class="form-control" id="subtype_selection">
                                                     <option value="First visit">First visit</option>
                                                     <option value="Check">Check</option>
                                                 </select>
@@ -183,7 +189,7 @@
                                             <button type="submit" class="btn btn-primary" data-dismiss="modal">Search</button>
                                         </div>
                                     </form>
-                                    <form onsubmit="requestAppointment();
+                                    <form onsubmit="updateAppointment();
                                             return false">
                                     <div class="form-group row" id="all_appointments">
                                         <label class="col-lg-3 col-form-label">All appointments</label>
@@ -191,7 +197,7 @@
                                             <select class="select" id="all_appointments_selection">
                                             </select>
                                             <div class="text-right" id="request_appointment"><br>
-                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Request</button>
+                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Update</button>
                                         </div>
                                         </div>
                                     </div>

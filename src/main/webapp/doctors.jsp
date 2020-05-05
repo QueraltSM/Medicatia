@@ -164,9 +164,8 @@
                                         <table class="table table-hover table-center mb-0" summary='somefreakydummytext'>
                                             <thead>
                                                 <tr>
-                                                    <th>DNI/NIE/NIF</th>
-                                                    <th>Name</th>
-                                                    <th>Category</th>
+                                                    <th>Doctor</th>
+                                                    <th>Speciality</th>
                                                     <th>Phone</th>
                                                     <th id="actions">Actions</th>
                                                 </tr>
