@@ -181,7 +181,7 @@ function countPatientAppointments(id) {
         snapshot.forEach(function (childX) {
             childX.forEach(function (snapshotChild) { // iterate appointments
                 snapshotChild.forEach(function (date) {
-                    if (date.child("state").val() !== "free" && date.child("type").val( )=== "medical" && date.child("patient").val() === id) {
+                    if (date.child("state").val() !== "free" && date.child("type").val( ) === "medical" && date.child("patient").val() === id) {
                         medical_appointments += 1;
                     } else if (date.child("state").val() !== "free" && date.child("type").val() === "nursing" && date.child("patient").val() === id) {
                         nursing_appointments += 1;
@@ -659,8 +659,22 @@ function deleteAppointment() {
     });
 }
 
+function freeAppointment() {
+    var date = sessionStorage.getItem("last_appointment_date").split('/').join("-");
+    var appointment = sessionStorage.getItem("last_appointment_time");
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("id") + "/" + date + "/" + appointment).set({
+        state: "free",
+        type: sessionStorage.getItem("appointment_type")
+    }, function (error) {
+        if (error)
+            alert(error);
+        else
+            window.location = "home.jsp";
+    });
+}
+
 function updateAppointment() {
-    deleteAppointment();
+    freeAppointment();
     var selected_appointment = document.getElementById("all_appointments_selection").value;
     var selected_date = $("#datepicker").val().split('/').join("-");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("id") + "/" + selected_date + "/" + selected_appointment).set({
@@ -690,10 +704,12 @@ function setAppointment(date, time, user, subtype, state) {
         var content = '<tr><td>' + date + '</td><td>' + time + '</td><td>' + snapshot.child("name").val() + '</td><td>' + subtype + '</td>';
         var name = snapshot.child("name").val();
         if (state === "accepted") {
-            content += '</td><td><a class="btn btn-sm bg-success-light mr-2" onclick=storeLastSelectedAppointment("' + date + '","' + time + '","' + user + '","' + subtype + '","' + state + '")> <i class="fe fe-pencil"></i> Edit</a>' +
+            name = name.replace(" ", ":");
+            subtype = subtype.replace(" ", ":");
+            content += '<td><a class="btn btn-sm bg-success-light mr-2" onclick=storeLastSelectedAppointment("' + date + '","' + time + '","' + user + '","' + name + '","' + subtype + '","' + state + '")> <i class="fe fe-pencil"></i> Edit</a>' +
                     '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + user + '")><i class="fe fe-trash"></i> Delete </a></td></tr>';
         } else {
-            content += '</td><td><a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + user + '","edit")> <i class="fe fe-pencil"></i> Accept</a>' +
+            content += '<td><a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + user + '","edit")> <i class="fe fe-pencil"></i> Accept</a>' +
                     '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + user + '")><i class="fe fe-trash"></i>Reject</a></td></tr>';
         }
         $("#appointments_table").append(content);
@@ -713,14 +729,12 @@ function getAppointmentsData(state) {
     });
 }
 
-function storeLastSelectedAppointment(date, time, user, subtype, state) {
-    firebase.database().ref('Users/' + user).once('value').then(function (snapshot) {
-        sessionStorage.setItem("last_appointment_date", date);
-        sessionStorage.setItem("last_appointment_time", time);
-        sessionStorage.setItem("last_appointment_patient_uid", user);
-        sessionStorage.setItem("last_appointment_patient", snapshot.child("name").val());
-        sessionStorage.setItem("last_appointment_subtype", subtype);
-        sessionStorage.setItem("last_appointment_state", state);
-        window.location = "editappointment.jsp";
-    });
+function storeLastSelectedAppointment(date, time, user, name, subtype, state) {
+    sessionStorage.setItem("last_appointment_date", date);
+    sessionStorage.setItem("last_appointment_time", time);
+    sessionStorage.setItem("last_appointment_patient_uid", user);
+    sessionStorage.setItem("last_appointment_patient", name.replace(":", " "));
+    sessionStorage.setItem("last_appointment_subtype", subtype.replace(":", " "));
+    sessionStorage.setItem("last_appointment_state", state);
+    window.location = "editappointment.jsp";
 }

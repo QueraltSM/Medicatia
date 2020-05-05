@@ -83,10 +83,8 @@
                         </div>
                     </li>
                     <!-- /User Menu -->
-
                 </ul>
                 <!-- /Header Right Menu -->
-
             </div>
             <!-- /Header -->
                       <!-- Sidebar -->
@@ -136,7 +134,6 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
                         </ul>
                     </div>
                 </div>
@@ -145,7 +142,6 @@
             <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
-
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
@@ -155,7 +151,6 @@
                         </div>
                     </div>
                     <!-- /Page Header -->
-
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
@@ -164,15 +159,13 @@
                                         <table class="table table-hover table-center mb-0" summary='somefreakydummytext'>
                                             <thead>
                                                 <tr>
-                                                    <th>DNI/NIE/NIF</th>
-                                                    <th>Name</th>
-                                                    <th>Category</th>
+                                                    <th>Doctor</th>
+                                                    <th>Speciality</th>
                                                     <th>Phone</th>
                                                     <th id="actions">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="nurse_table">
-
                                             </tbody>
                                         </table>
                                     </div>
@@ -180,12 +173,10 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             <!-- /Page Wrapper -->
         </div>
-
         <!-- Delete Modal -->
         <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
@@ -203,21 +194,16 @@
         </div>
         <!-- /Delete Modal -->
         <!-- /Main Wrapper -->
-
         <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
-
         <!-- Bootstrap Core JS -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
         <!-- Datatables JS -->
         <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
         <script src="assets/plugins/datatables/datatables.min.js"></script>
-
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
