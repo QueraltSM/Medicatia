@@ -38,6 +38,7 @@ function replaceLocation(name, type) {
 }
 
 function login() {
+    
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
@@ -139,6 +140,7 @@ function getSessionData() {
     connectToFirebase();
     setUserData();
     setUserStyle(sessionStorage.getItem("type"));
+    //getAcceptedNurseAppointments();
 }
 
 function countAppoinments(id) {
@@ -536,4 +538,65 @@ function validatePass(password, password_repeat) {
         document.getElementById("errorPass").innerHTML = "";
         sessionStorage.setItem("validation_pass", "true");
     }
+}
+
+function searchPatient(obj){
+    tr =  obj.value;
+    var x = document.getElementById("xxx").value;
+
+    if(tr == "dni"){
+        alert("Eligio dni " + x);
+    }else{
+        alert("Eligio nombre" + x);
+    }
+    var type="patient"
+    getSessionData();
+    document.getElementById("actions").style.display = "none";
+    var database = firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+        var content = "";
+        snapshot.forEach(function (childX) {
+            if (childX.key !== sessionStorage.getItem("id")) {
+                if (childX.child("type").val() === "administrador") {
+                    content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
+                            "<td>" + childX.child("name").val() + "</td>";
+                    
+                }
+            }
+        });
+
+        $("#" + "acceptedAppointments" + "_table").append(content);
+
+    });
+}
+
+function getAcceptedNurseAppointments(){
+   
+    getSessionData();
+    var type="patient"
+    document.getElementById("actions").style.display = "none";
+    var database = firebase.database().ref('Users/').once('value').then(function (snapshot) {
+        var content = "";
+        snapshot.forEach(function (childX) {
+            if (childX.key !== sessionStorage.getItem("id")) {
+                if (childX.child("type").val() === type) {
+                    content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
+                            "<td>" + childX.child("name").val() + "</td>";
+                    if (type !== "administrator" || type !== "patient") {
+                        content += "<td>" + childX.child("speciality").val() + "</td>"
+                    }
+                    content += "<td>" + childX.child("phone").val() + "</td>";
+                    if (sessionStorage.getItem("type") === "administrator") {
+                        document.getElementById("actions").style.display = "flex";
+                        content += '<td><a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + childX.key + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
+                                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + childX.key + '")>    <i class="fe fe-trash"></i> Delete </a></td>' +
+                                "</tr>";
+                    }
+                }
+            }
+        });
+
+        $("#" + "pat_table").append(content);
+
+    });
+    
 }

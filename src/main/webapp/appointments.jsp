@@ -96,7 +96,7 @@
                     <div id="sidebar-menu" class="sidebar-menu">
                         <ul>
                             <li class="menu-title">
-                                <span>Main</span>
+                                <span>Hola</span>
                             </li>
                             <li>
                                 <a href="home.jsp"><i class="fe fe-home"></i> <span>Dashboard</span></a>
@@ -142,6 +142,8 @@
                     </div>
                 </div>
             </div>
+            
+            
             <!-- /Sidebar -->
             <!-- Page Wrapper -->
             <div class="page-wrapper">
@@ -151,7 +153,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h3 class="page-title">List of Patients</h3>
+                                <h3 class="page-title">List of Accepted Appointments</h3>
 
                             </div>
                         </div>
@@ -162,17 +164,7 @@
                         
                         <div class="col-sm-12">
                             <div class="card">
-                                <label for="fname">Input:</label>
-                                <input type="text" id="xxx" name="xxx"><br>
-                                <select id="values" onchange="searchPatient(this)">
-                                    <option value="name">Nombre</option>
-                                    <option value="dni">DNI</option>
-                                </select>
                                 
-                                
-
-                                   
-                                </form>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <div class="table-responsive">
@@ -186,7 +178,7 @@
                                                         <th id="actions">Actions</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody id="patient_table">
+                                                <tbody id="pat_table">
 
                                                 </tbody>
                                             </table>
