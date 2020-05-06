@@ -69,13 +69,20 @@ function connectToFirebase() {
 
 function setAdminStyle() {
     document.getElementById("adduser_menu_section").style.display = "block";
-    if (document.getElementById("administrators_section"))  document.getElementById("administrators_section").style.display = "block";
-    if (document.getElementById("doctors_section"))  document.getElementById("doctors_section").style.display = "block";
-    if (document.getElementById("appointments_section")) document.getElementById("appointments_section").style.display = "none";
-    if (document.getElementById("medical_appointments_section"))  document.getElementById("medical_appointments_section").style.display = "block";
-    if (document.getElementById("nursing_appointments_section"))  document.getElementById("nursing_appointments_section").style.display = "block";
-    if (document.getElementById("nurses_section"))  document.getElementById("nurses_section").style.display = "block";
-    if (document.getElementById("patients_section"))  document.getElementById("patients_section").style.display = "block";
+    if (document.getElementById("administrators_section"))
+        document.getElementById("administrators_section").style.display = "block";
+    if (document.getElementById("doctors_section"))
+        document.getElementById("doctors_section").style.display = "block";
+    if (document.getElementById("appointments_section"))
+        document.getElementById("appointments_section").style.display = "none";
+    if (document.getElementById("medical_appointments_section"))
+        document.getElementById("medical_appointments_section").style.display = "block";
+    if (document.getElementById("nursing_appointments_section"))
+        document.getElementById("nursing_appointments_section").style.display = "block";
+    if (document.getElementById("nurses_section"))
+        document.getElementById("nurses_section").style.display = "block";
+    if (document.getElementById("patients_section"))
+        document.getElementById("patients_section").style.display = "block";
     document.getElementById("administrators_menu_section").style.display = "block";
     document.getElementById("doctors_menu_section").style.display = "block";
     document.getElementById("nurses_menu_section").style.display = "block";
@@ -333,7 +340,7 @@ function getUsersData(type) {
                     content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
                             "<td>" + childX.child("name").val() + "</td>";
                     if (type !== "administrator" || type !== "patient") {
-                        content += "<td>" + childX.child("speciality").val() + "</td>"
+                        content += "<td>" + childX.child("speciality").val() + "</td>";
                     }
                     content += "<td>" + childX.child("phone").val() + "</td>";
                     if (sessionStorage.getItem("type") === "administrator") {
@@ -351,6 +358,48 @@ function getUsersData(type) {
     });
 
 }
+
+function getAppointmentsData(state) {
+    getSessionData();
+    sessionStorage.setItem("flag", "false");
+    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+        //alert(snapshot.key);
+        snapshot.forEach(function (childX) {
+            //alert(childX.key);
+            childX.forEach(function (childY) {
+                //alert(childY.key);
+                if (childY.child("state").val() === state) {
+                    sessionStorage.setItem("flag", "true");
+                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
+                }
+            });
+        });
+        if (sessionStorage.getItem("flag") === "false") {
+            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+        }
+    });
+
+    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+}
+
+function setAppointmentsData(state, date, hour, patient, reason) {
+    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
+        var content = "<tr>" + "<td>" + date + "</td>" +
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Delete </a></td>' +
+                "</tr>";
+        if(sessionStorage.getItem("type") === "doctor"){
+            $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }else{
+            $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }
+        
+    });
+}
+
 
 function setUserData() {
     document.getElementById("name").innerHTML = sessionStorage.getItem("name");
@@ -536,4 +585,26 @@ function validatePass(password, password_repeat) {
         document.getElementById("errorPass").innerHTML = "";
         sessionStorage.setItem("validation_pass", "true");
     }
+}
+
+function searchPatient() {
+    var search = document.getElementById("search_patient").value;
+    sessionStorage.setItem("flag2", "false");
+    firebase.database().ref('Users/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            if (childX.child("type").val() === "patient" && (childX.child("dni").val() === search) || childX.child("name").val() === search) {
+                sessionStorage.setItem("flag2", "true");
+                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
+                        "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("email").val() + "</td>" +
+                        "<td>" + "null" + "</td>" +
+                        "</tr>";
+            }
+            $("#patient_table").append(content);
+        });
+        if (sessionStorage.getItem("flag2") === "false") {
+            document.getElementById("nullSearch").innerHTML = "No search results";
+        }
+    });
+    document.getElementById("patient_table").innerHTML = "";
 }
