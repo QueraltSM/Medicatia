@@ -25,7 +25,9 @@
 
     </head>
     <body onload='getUsersData("doctor")'>
-
+        <%
+        String type = request.getParameter("");
+        %>
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 

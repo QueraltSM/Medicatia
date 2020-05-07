@@ -49,8 +49,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search_patient" placeholder="Search here">
+                        <button class="btn" type="button" onclick="searchPatient()"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -159,29 +159,17 @@
                     <!-- /Page Header -->
 
                     <div class="row">
-                        
                         <div class="col-sm-12">
                             <div class="card">
-                                <label for="fname">Input:</label>
-                                <input type="text" id="xxx" name="xxx"><br>
-                                <select id="values" onchange="searchPatient(this)">
-                                    <option value="name">Nombre</option>
-                                    <option value="dni">DNI</option>
-                                </select>
-                                
-                                
-
-                                   
-                                </form>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <div class="table-responsive">
-                                            <table class="table table-hover table-center mb-0" id="tbl">
+                                            <table class="table table-hover table-center mb-0" id="nullSearch">
                                                 <thead>
                                                     <tr>
                                                         <th>DNI/NIE/NIF</th>
                                                         <th>Name</th>
-                                                        <th>Category</th>
+                                                        <th>Email</th>
                                                         <th>Phone</th>
                                                         <th id="actions">Actions</th>
                                                     </tr>

@@ -540,34 +540,33 @@ function validatePass(password, password_repeat) {
     }
 }
 
-function searchPatient(obj){
-    tr =  obj.value;
-    var x = document.getElementById("xxx").value;
-
-    if(tr == "dni"){
-        alert("Eligio dni " + x);
-    }else{
-        alert("Eligio nombre" + x);
-    }
-    var type="patient"
-    getSessionData();
-    document.getElementById("actions").style.display = "none";
-    var database = firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
-        var content = "";
+function searchPatient() {
+    var search = document.getElementById("search_patient").value;
+    sessionStorage.setItem("flag2", "false");
+    firebase.database().ref('Users/').once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
-            if (childX.key !== sessionStorage.getItem("id")) {
-                if (childX.child("type").val() === "administrador") {
-                    content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
-                            "<td>" + childX.child("name").val() + "</td>";
-                    
-                }
+            if (childX.child("type").val() === "patient" && (childX.child("dni").val().includes(search)) || childX.child("name").val().includes(search)) {
+                sessionStorage.setItem("flag2", "true");
+                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
+                        "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("email").val() + "</td>" +
+                        "<td>" + "null" + "</td>" +
+                        "</tr>";
             }
+            $("#patient_table").append(content);
         });
-
-        $("#" + "acceptedAppointments" + "_table").append(content);
-
+        if (sessionStorage.getItem("flag2") === "false") {
+            document.getElementById("nullSearch").innerHTML = "No search results";
+        }
     });
+    document.getElementById("patient_table").innerHTML = "";
 }
+
+
+
+
+
+
 
 function getAcceptedNurseAppointments(){
    
