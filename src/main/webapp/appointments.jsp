@@ -171,7 +171,7 @@
                                             <table class="table table-hover table-center mb-0" id="tbl">
                                                 <thead>
                                                     <tr>
-                                                        <th>DNI/NIE/NIF</th>
+                                                        <th>DNI/NIE</th>
                                                         <th>Name</th>
                                                         <th>Category</th>
                                                         <th>Phone</th>
