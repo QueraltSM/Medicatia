@@ -1,10 +1,16 @@
+<%-- 
+    Document   : appointments
+    Created on : 4 may. 2020, 11:16:26
+    Author     : charl
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
-
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
 
@@ -17,20 +23,27 @@
         <!-- Feathericon CSS -->
         <link rel="stylesheet" href="assets/css/feathericon.min.css">
 
-        <!-- Datatables CSS -->
-        <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+        <link rel="stylesheet" href="assets/plugins/morris/morris.css">
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
+        <!--[if lt IE 9]>
+                <script src="assets/js/html5shiv.min.js"></script>
+                <script src="assets/js/respond.min.js"></script>
+        <![endif]-->
     </head>
-    <body onload='getUsersData("patient")'>
+    <%
+        String state = (String) request.getParameter("state");
+    %>
+    <body onload='getAppointmentsData("<%=state%>")'>
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 
             <!-- Header -->
             <div class="header">
+                
 
                 <!-- Logo -->
                 <div class="header-left">
@@ -47,13 +60,7 @@
                     <i class="fe fe-text-align-left"></i>
                 </a>
 
-                <div class="top-nav-search">
-                    <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-
+             
                 <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
                     <i class="fa fa-bars"></i>
@@ -70,7 +77,7 @@
                         <div class="dropdown-menu">
                             <div class="user-header">
                                 <div class="avatar avatar-sm">
-                                    <img id="imagenU2" alt="User Image" class="avatar-img rounded-circle">
+                                    <img id="imagenU2" lass="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
                                     <h6 id="name"></h6>
@@ -96,7 +103,7 @@
                     <div id="sidebar-menu" class="sidebar-menu">
                         <ul>
                             <li class="menu-title">
-                                <span>Hola</span>
+                                <span>Main</span>
                             </li>
                             <li>
                                 <a href="home.jsp"><i class="fe fe-home"></i> <span>Dashboard</span></a>
@@ -107,24 +114,11 @@
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
                                 </ul>
                             </li>
-                            <li class="has-submenu"  id="medical_appointments_menu_section">
-                                <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
-                                <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
-                                </ul>
-                            </li>
-                            <li class="has-submenu" id="nursing_appointments_menu_section">
-                                <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
-                                <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
-                                </ul>
-                            </li>
+                           
                             <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
@@ -142,10 +136,8 @@
                     </div>
                 </div>
             </div>
+
             
-            
-            <!-- /Sidebar -->
-            <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
 
@@ -153,36 +145,30 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h3 class="page-title">List of Accepted Appointments</h3>
-
+                                <h3 class="page-title" id="appointments_title"></h3>
                             </div>
                         </div>
                     </div>
                     <!-- /Page Header -->
 
                     <div class="row">
-                        
+
                         <div class="col-sm-12">
                             <div class="card">
-                                
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-center mb-0" id="tbl">
-                                                <thead>
-                                                    <tr>
-                                                        <th>DNI/NIE</th>
-                                                        <th>Name</th>
-                                                        <th>Category</th>
-                                                        <th>Phone</th>
-                                                        <th id="actions">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="pat_table">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
+                                        <table class="table table-hover table-center mb-0" summary='somefreakydummytext' id="nullAppoinments">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Hour</th>
+                                                    <th>Patient</th>
+                                                    <th>Reason</th>
+                                                    <th id="actions">Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="doctor_<%=state%>_table" class="nurse_<%=state%>_table"></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -191,32 +177,8 @@
 
                 </div>
             </div>
-            <!-- /Page Wrapper -->
-        </div>
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <!--	<div class="modal-header">
-                                    <h5 class="modal-title">Delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                    </button>
-                            </div>-->
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary">Save </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Delete Modal -->
 
-
+        </div>
         <!-- /Main Wrapper -->
 
         <!-- jQuery -->
@@ -229,15 +191,14 @@
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
 
-        <!-- Datatables JS -->
-        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/datatables/datatables.min.js"></script>
+        <script src="assets/plugins/raphael/raphael.min.js"></script>
+        <script src="assets/plugins/morris/morris.min.js"></script>
+        <script src="assets/js/chart.morris.js"></script>
 
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
+
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
         <script src="script.js"></script>
     </body>
-
-    <!-- Mirrored from dreamguys.co.in/demo/doccure/admin/patient-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Dec 2019 21:07:49 GMT -->
 </html>

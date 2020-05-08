@@ -87,9 +87,11 @@ function setAdminStyle() {
 }
 
 function setUserStyle(type) {
+    
     if (type === "administrator")
         setAdminStyle();
     else {
+        
         if (document.getElementById("administrators_section"))
             document.getElementById("administrators_section").style.display = "none";
         document.getElementById("administrators_menu_section").style.display = "none";
@@ -137,9 +139,12 @@ function setHomeData() {
 }
 
 function getSessionData() {
+    
     connectToFirebase();
     setUserData();
+    
     setUserStyle(sessionStorage.getItem("type"));
+    
     //getAcceptedNurseAppointments();
 }
 
@@ -354,6 +359,49 @@ function getUsersData(type) {
 
 }
 
+function getAppointmentsData(state) {
+    
+
+    getSessionData(); 
+    
+    sessionStorage.setItem("flag", "false");
+    
+    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+        alert("PEP")
+        snapshot.forEach(function (childX) {  
+            childX.forEach(function (childY) {
+                if (childY.child("state").val() === state) {
+                    sessionStorage.setItem("flag", "true");
+                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
+                }
+            });
+        });
+        if (sessionStorage.getItem("flag") === "false") {
+            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+        }
+    });
+
+    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+}
+
+function setAppointmentsData(state, date, hour, patient, reason) {
+    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
+        var content = "<tr>" + "<td>" + date + "</td>" +
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Cancel </a></td>' +
+                "</tr>";
+        if(sessionStorage.getItem("type") === "nurse"){
+            $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }else{
+            $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }
+        
+    });
+}
+
 function setUserData() {
     document.getElementById("name").innerHTML = sessionStorage.getItem("name");
     document.getElementById("type").innerHTML = sessionStorage.getItem("type");
@@ -550,11 +598,13 @@ function searchPatient() {
                 var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
                         "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("email").val() + "</td>" +
-                        "<td>" + "null" + "</td>" +
+                        "<td>" + childX.child("phone").val() + "</td>" +
                         "</tr>";
+                
             }
             $("#patient_table").append(content);
         });
+        
         if (sessionStorage.getItem("flag2") === "false") {
             document.getElementById("nullSearch").innerHTML = "No search results";
         }
@@ -562,40 +612,3 @@ function searchPatient() {
     document.getElementById("patient_table").innerHTML = "";
 }
 
-
-
-
-
-
-
-function getAcceptedNurseAppointments(){
-   
-    getSessionData();
-    var type="patient"
-    document.getElementById("actions").style.display = "none";
-    var database = firebase.database().ref('Users/').once('value').then(function (snapshot) {
-        var content = "";
-        snapshot.forEach(function (childX) {
-            if (childX.key !== sessionStorage.getItem("id")) {
-                if (childX.child("type").val() === type) {
-                    content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
-                            "<td>" + childX.child("name").val() + "</td>";
-                    if (type !== "administrator" || type !== "patient") {
-                        content += "<td>" + childX.child("speciality").val() + "</td>"
-                    }
-                    content += "<td>" + childX.child("phone").val() + "</td>";
-                    if (sessionStorage.getItem("type") === "administrator") {
-                        document.getElementById("actions").style.display = "flex";
-                        content += '<td><a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + childX.key + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
-                                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + childX.key + '")>    <i class="fe fe-trash"></i> Delete </a></td>' +
-                                "</tr>";
-                    }
-                }
-            }
-        });
-
-        $("#" + "pat_table").append(content);
-
-    });
-    
-}
