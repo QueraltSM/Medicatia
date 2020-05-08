@@ -89,7 +89,7 @@
 
             </div>
             <!-- /Header -->
-           <!-- Sidebar -->
+                      <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -102,6 +102,9 @@
                             </li>
                             <li id="adduser_menu_section">
                                 <a href="adduser.jsp"><i class="fe fe-user-plus"></i> <span>User</span></a>
+                            </li>
+                            <li id="history_menu_section">
+                                <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
                            <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>

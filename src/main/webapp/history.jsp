@@ -28,7 +28,7 @@
                 <script src="assets/js/respond.min.js"></script>
         <![endif]-->
     </head>
-    <body onload="resetEditAppointmentForm()">
+    <body onload="setMedicalHistory()">
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -106,28 +106,28 @@
                             <li id="history_menu_section">
                                 <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
-                           <li class="has-submenu" id="appointments_menu_section">
+                            <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu"  id="medical_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
                                     <li><a href="appointments.jsp?state=pending">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu" id="nursing_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
                                     <li><a href="appointments.jsp?state=pending">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li id="administrators_menu_section">
+                            </li>
+                            <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -139,7 +139,7 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 </div>
@@ -152,7 +152,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="page-title">Update an appointment</h3>
+                                <h3 class="page-title">Medical History</h3>
                             </div>
                         </div>
                     </div>
@@ -162,49 +162,88 @@
                         <div class="col-xl-12 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h4 class="card-title">Appointment data</h4>
+                                    <h4 class="card-title">Patient Information</h4>
                                 </div>
                                 <div class="card-body">
-                                    <form onsubmit="checkAvailability();
-                                            return false">
-                                        <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label">Patient</label>
-                                            <div class="col-lg-9">
-                                                <label id="patient_name"></label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label">Date</label>
-                                            <div class="col-lg-9">
-                                                <input type="text" class="form-control" id="datepicker" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row" id="Rol">
-                                            <label class="col-lg-3 col-form-label">Type</label>
-                                            <div class="col-lg-9">
-                                                <select class="form-control" id="subtype_selection">
-                                                    <option value="First visit">First visit</option>
-                                                    <option value="Check">Check</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Search</button>
-                                        </div>
-                                    </form>
-                                    <form onsubmit="updateAppointment();
-                                            return false">
-                                    <div class="form-group row" id="all_appointments">
-                                        <label class="col-lg-3 col-form-label">All appointments</label>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Name</label>
                                         <div class="col-lg-9">
-                                            <select class="select" id="all_appointments_selection">
-                                            </select>
-                                            <div class="text-right" id="request_appointment"><br>
-                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Update</button>
-                                        </div>
+                                            <label id="p_name"></label>
                                         </div>
                                     </div>
-                                    </form>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Sex</label>
+                                        <div class="col-lg-9">
+                                            <label id="sex"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Race</label>
+                                        <div class="col-lg-9">
+                                            <label id="race"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Birth</label>
+                                        <div class="col-lg-9">
+                                            <label id="birth"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Email</label>
+                                        <div class="col-lg-9">
+                                            <label id="email"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Phone</label>
+                                        <div class="col-lg-9">
+                                            <label id="phone"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Place of birth</label>
+                                        <div class="col-lg-9">
+                                            <label id="p_birth"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Place of residence</label>
+                                        <div class="col-lg-9">
+                                            <label id="p_residence"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Weight</label>
+                                        <div class="col-lg-9">
+                                            <label id="weight"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Height</label>
+                                        <div class="col-lg-9">
+                                            <label id="height"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Marital status</label>
+                                        <div class="col-lg-9">
+                                            <label id="marital_status"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Allergies</label>
+                                        <div class="col-lg-9">
+                                            <label id="allergies"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Disease</label>
+                                        <div class="col-lg-9">
+                                            <label id="diseases"></label>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -227,16 +266,5 @@
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
         <script src="script.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/resources/demos/style.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script>
-           $(function () {
-                $("#datepicker").datepicker({
-                    dateFormat: 'dd/mm/yy'
-                });
-            });
-        </script>
     </body>
 </html>

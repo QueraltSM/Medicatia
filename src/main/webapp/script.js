@@ -74,6 +74,7 @@ function connectToFirebase() {
 
 function setAdminStyle() {
     document.getElementById("adduser_menu_section").style.display = "block";
+    document.getElementById("history_menu_section").style.display = "none";
     if (document.getElementById("administrators_section"))
         document.getElementById("administrators_section").style.display = "block";
     if (document.getElementById("doctors_section"))
@@ -117,6 +118,7 @@ function setUserStyle(type) {
             document.getElementById("appointments_section").style.display = "block";
 
         if (type === "patient") {
+            document.getElementById("history_menu_section").style.display = "block";
             document.getElementById("appointments_menu_section").style.display = "none";
             if (document.getElementById("appointments_section"))
                 document.getElementById("appointments_section").style.display = "none";
@@ -385,7 +387,7 @@ function getUsersData(type) {
             if (childX.key !== sessionStorage.getItem("id")) {
                 if (childX.child("type").val() === type) {
                     content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
-                    if (type !== "administrator" || type !== "patient") {
+                    if (type !== "administrator" && type !== "patient") {
                         content += "<td>" + childX.child("speciality").val() + "</td>";
                     }
                     content += "<td>" + childX.child("phone").val() + "</td>";
@@ -737,4 +739,25 @@ function storeLastSelectedAppointment(date, time, user, name, subtype, state) {
     sessionStorage.setItem("last_appointment_subtype", subtype.replace(":", " "));
     sessionStorage.setItem("last_appointment_state", state);
     window.location = "editappointment.jsp";
+}
+
+function setMedicalHistory(){
+    getSessionData();
+    firebase.database().ref('MedicalHistory/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            if (childX.key==="name") document.getElementById("p_name").innerHTML = childX.val();
+            if (childX.key==="sex") document.getElementById("sex").innerHTML = childX.val();
+            if (childX.key==="race") document.getElementById("race").innerHTML = childX.val();
+            if (childX.key==="birth") document.getElementById("birth").innerHTML = childX.val();
+            if (childX.key==="email") document.getElementById("email").innerHTML = childX.val();
+            if (childX.key==="phone") document.getElementById("phone").innerHTML = childX.val();
+            if (childX.key==="place_of_birth") document.getElementById("p_birth").innerHTML = childX.val();
+            if (childX.key==="place_of_residence") document.getElementById("p_residence").innerHTML = childX.val();
+            if (childX.key==="weight") document.getElementById("weight").innerHTML = childX.val();
+            if (childX.key==="height") document.getElementById("height").innerHTML = childX.val();
+            if (childX.key==="marital_status") document.getElementById("marital_status").innerHTML = childX.val();
+            if (childX.key==="allergies") document.getElementById("allergies").innerHTML = childX.val();
+            if (childX.key==="diseases") document.getElementById("diseases").innerHTML = childX.val();
+        });
+    });  
 }
