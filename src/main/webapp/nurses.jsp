@@ -24,8 +24,7 @@
         <link rel="stylesheet" href="assets/css/style.css">
 
     </head>
-    <body onload='getUsersData("nurse")'>
-
+    <body onload='getUsersData("nurse")'> <!--Datos de enfermeros-->
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 
@@ -49,8 +48,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search_nurse" placeholder="Search here"> <!---->
+                        <button class="btn" type="button" onclick="searchNurses()"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -97,7 +96,7 @@
                             <li class="menu-title">
                                 <span>Main</span>
                             </li>
-                            <li>
+                            <li><!--Parte derecha del menú-->
                                 <a href="home.jsp"><i class="fe fe-home"></i> <span>Dashboard</span></a>
                             </li>
                             <li id="adduser_menu_section">
@@ -124,7 +123,7 @@
                                     <li><a href="appointments.jsp?t=pending">Pending</a></li>
                                 </ul>
                             </li>
-                            <li id="administrators_menu_section">
+                            <li id="administrators_menu_section"> <!--Parte derecha del menú-->
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -157,12 +156,12 @@
                     </div>
                     <!-- /Page Header -->
 
-                    <div class="row">
+                    <div class="row"> <!--Tabla de dni, nombre, categoría ...-->
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" summary='somefreakydummytext'>
+                                        <table class="table table-hover table-center mb-0" id="nullSearch">
                                             <thead>
                                                 <tr>
                                                     <th>DNI/NIE/NIF</th>

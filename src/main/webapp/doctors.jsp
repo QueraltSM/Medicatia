@@ -49,8 +49,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search_doctor" placeholder="Search here">
+                        <button class="btn" type="button" onclick="searchDoctors()"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -162,7 +162,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" summary='somefreakydummytext'>
+                                        <table class="table table-hover table-center mb-0" id="nullSearch">
                                             <thead>
                                                 <tr>
                                                     <th>DNI/NIE/NIF</th>

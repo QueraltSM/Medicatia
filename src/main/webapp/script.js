@@ -537,3 +537,47 @@ function validatePass(password, password_repeat) {
         sessionStorage.setItem("validation_pass", "true");
     }
 }
+
+function searchNurses() {
+    var search = document.getElementById("search_nurse").value; //Búsqueda
+    sessionStorage.setItem("flag", "false"); //Guarda la sesión
+    firebase.database().ref('Users/').once('value').then(function (snapshot) { //Accede a los usuarios de la BBDD
+        snapshot.forEach(function (childX) { //Va bajando de forma anidada
+            if (childX.child("type").val() === "nurse" && (childX.child("speciality").val() === search)) {
+                sessionStorage.setItem("flag", "true");
+                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" + //Tabla de dni, nombre, email, phone
+                        "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("speciality").val() + "</td>" +
+                         "<td>" + childX.child("phone").val() + "</td>" +
+                        "</tr>";
+            }
+            $("#nurse_table").append(content); //tabla de enfermeros
+        });
+        if (sessionStorage.getItem("flag") === "false") { 
+            document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
+        }
+    });
+    document.getElementById("nurse_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
+}
+
+function searchDoctors() {
+    var search = document.getElementById("search_doctor").value; //Búsqueda
+    sessionStorage.setItem("flag", "false"); //Guarda la sesión
+    firebase.database().ref('Users/').once('value').then(function (snapshot) { //Accede a los usuarios de la BBDD
+        snapshot.forEach(function (childX) { //Va bajando de forma anidada
+            if (childX.child("type").val() === "doctor" && (childX.child("speciality").val() === search)) {
+                sessionStorage.setItem("flag", "true");
+                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" + //Tabla de dni, nombre, email, phone
+                       "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("speciality").val() + "</td>" +
+                         "<td>" + childX.child("phone").val() + "</td>" +
+                        "</tr>";
+            }
+            $("#doctor_table").append(content); //tabla de enfermeros
+        });
+        if (sessionStorage.getItem("flag") === "false" || sessionStorage.getItem("flag4") === "") { 
+            document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
+        }
+    });
+    document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
+}
