@@ -38,7 +38,6 @@ function replaceLocation(name, type) {
 }
 
 function login() {
-    
     var email = document.getElementById("email").value;
     var password = document.getElementById("password").value;
     firebase.auth().signInWithEmailAndPassword(email, password).catch(function (error) {
@@ -70,13 +69,20 @@ function connectToFirebase() {
 
 function setAdminStyle() {
     document.getElementById("adduser_menu_section").style.display = "block";
-    if (document.getElementById("administrators_section"))  document.getElementById("administrators_section").style.display = "block";
-    if (document.getElementById("doctors_section"))  document.getElementById("doctors_section").style.display = "block";
-    if (document.getElementById("appointments_section")) document.getElementById("appointments_section").style.display = "none";
-    if (document.getElementById("medical_appointments_section"))  document.getElementById("medical_appointments_section").style.display = "block";
-    if (document.getElementById("nursing_appointments_section"))  document.getElementById("nursing_appointments_section").style.display = "block";
-    if (document.getElementById("nurses_section"))  document.getElementById("nurses_section").style.display = "block";
-    if (document.getElementById("patients_section"))  document.getElementById("patients_section").style.display = "block";
+    if (document.getElementById("administrators_section"))
+        document.getElementById("administrators_section").style.display = "block";
+    if (document.getElementById("doctors_section"))
+        document.getElementById("doctors_section").style.display = "block";
+    if (document.getElementById("appointments_section"))
+        document.getElementById("appointments_section").style.display = "none";
+    if (document.getElementById("medical_appointments_section"))
+        document.getElementById("medical_appointments_section").style.display = "block";
+    if (document.getElementById("nursing_appointments_section"))
+        document.getElementById("nursing_appointments_section").style.display = "block";
+    if (document.getElementById("nurses_section"))
+        document.getElementById("nurses_section").style.display = "block";
+    if (document.getElementById("patients_section"))
+        document.getElementById("patients_section").style.display = "block";
     document.getElementById("administrators_menu_section").style.display = "block";
     document.getElementById("doctors_menu_section").style.display = "block";
     document.getElementById("nurses_menu_section").style.display = "block";
@@ -87,11 +93,9 @@ function setAdminStyle() {
 }
 
 function setUserStyle(type) {
-    
     if (type === "administrator")
         setAdminStyle();
     else {
-        
         if (document.getElementById("administrators_section"))
             document.getElementById("administrators_section").style.display = "none";
         document.getElementById("administrators_menu_section").style.display = "none";
@@ -139,13 +143,9 @@ function setHomeData() {
 }
 
 function getSessionData() {
-    
     connectToFirebase();
     setUserData();
-    
     setUserStyle(sessionStorage.getItem("type"));
-    
-    //getAcceptedNurseAppointments();
 }
 
 function countAppoinments(id) {
@@ -340,7 +340,7 @@ function getUsersData(type) {
                     content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
                             "<td>" + childX.child("name").val() + "</td>";
                     if (type !== "administrator" || type !== "patient") {
-                        content += "<td>" + childX.child("speciality").val() + "</td>"
+                        content += "<td>" + childX.child("speciality").val() + "</td>";
                     }
                     content += "<td>" + childX.child("phone").val() + "</td>";
                     if (sessionStorage.getItem("type") === "administrator") {
@@ -359,48 +359,7 @@ function getUsersData(type) {
 
 }
 
-function getAppointmentsData(state) {
-    
 
-    getSessionData(); 
-    
-    sessionStorage.setItem("flag", "false");
-    
-    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
-        alert("PEP")
-        snapshot.forEach(function (childX) {  
-            childX.forEach(function (childY) {
-                if (childY.child("state").val() === state) {
-                    sessionStorage.setItem("flag", "true");
-                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
-                }
-            });
-        });
-        if (sessionStorage.getItem("flag") === "false") {
-            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
-        }
-    });
-
-    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
-}
-
-function setAppointmentsData(state, date, hour, patient, reason) {
-    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
-        var content = "<tr>" + "<td>" + date + "</td>" +
-                "<td>" + hour + "</td>" +
-                "<td>" + snapshot2.child("name").val() + "</td>" +
-                "<td>" + reason + "</td>" +
-                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
-                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Cancel </a></td>' +
-                "</tr>";
-        if(sessionStorage.getItem("type") === "nurse"){
-            $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-        }else{
-            $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-        }
-        
-    });
-}
 
 function setUserData() {
     document.getElementById("name").innerHTML = sessionStorage.getItem("name");
@@ -612,3 +571,61 @@ function searchPatient() {
     document.getElementById("patient_table").innerHTML = "";
 }
 
+function getAppointmentsData(state) {
+    getSessionData();
+    //alert(state)
+    sessionStorage.setItem("flag", "false");
+    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            childX.forEach(function (childY) {
+                if (childY.child("state").val() === state) {
+                    sessionStorage.setItem("flag", "true");
+                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
+                }
+            });
+        });
+        if (sessionStorage.getItem("flag") === "false") {
+            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+        }
+    });
+
+    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+}
+
+function setAppointmentsData(state, date, hour, patient, reason) {
+    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
+        if(state === "accepted"){
+            var content = "<tr>" + "<td>" + date + "</td>" +
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Delete </a></td>' +
+                "</tr>";
+        }else{
+            var content = "<tr>" + "<td>" + date + "</td>" +
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-primary-light mr-2" href="#confirm_modal"> <i class="fe fe-check"></i> Confirm</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#cancel_modal">    <i class="fe fe-trash"></i> Cancel </a></td>' +
+                "</tr>";
+            
+        }
+        
+        if(sessionStorage.getItem("type") === "doctor"){
+            $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }else{
+            $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }
+        
+    });
+}
+
+function cancelAppointment(){
+    alert("Canceled");
+}
+
+function confirmAppointment(){
+    alert("Confirmed");
+}

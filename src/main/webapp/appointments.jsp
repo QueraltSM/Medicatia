@@ -37,13 +37,11 @@
         String state = (String) request.getParameter("state");
     %>
     <body onload='getAppointmentsData("<%=state%>")'>
-
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 
             <!-- Header -->
             <div class="header">
-                
 
                 <!-- Logo -->
                 <div class="header-left">
@@ -60,7 +58,8 @@
                     <i class="fe fe-text-align-left"></i>
                 </a>
 
-             
+              
+
                 <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
                     <i class="fa fa-bars"></i>
@@ -118,7 +117,20 @@
                                     <li><a href="appointments.jsp?state=pending">Pending</a></li>
                                 </ul>
                             </li>
-                           
+                            <li class="has-submenu"  id="medical_appointments_menu_section">
+                                <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
+                                <ul class="submenu">
+                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
+                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                </ul>
+                            </li>
+                            <li class="has-submenu" id="nursing_appointments_menu_section">
+                                <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
+                                <ul class="submenu">
+                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
+                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                </ul>
+                            </li>
                             <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
@@ -137,7 +149,7 @@
                 </div>
             </div>
 
-            
+
             <div class="page-wrapper">
                 <div class="content container-fluid">
 
@@ -152,7 +164,6 @@
                     <!-- /Page Header -->
 
                     <div class="row">
-
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-body">
@@ -179,6 +190,36 @@
             </div>
 
         </div>
+                                        
+        <div class="modal fade" id="cancel_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete</h4>
+                            <p class="mb-4">Are you sure want to cancel this appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="cancelAppointment()">Cancel</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                                        
+        <div class="modal fade" id="confirm_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete</h4>
+                            <p class="mb-4">Are you sure want to confirm tihs appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="confirmAppointment()">Confirm</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>                                
         <!-- /Main Wrapper -->
 
         <!-- jQuery -->
