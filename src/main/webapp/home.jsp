@@ -106,27 +106,27 @@
                             <li id="adduser_menu_section">
                                 <a href="adduser.jsp"><i class="fe fe-user-plus"></i> <span>User</span></a>
                             </li>
-                           <li class="has-submenu" id="appointments_menu_section">
+                            <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=null">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=null">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu"  id="medical_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=medical">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=medical">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu" id="nursing_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=nursing">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=nursing">Pending</a></li>
                                 </ul>
-                           </li>
+                            </li>
                            <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
