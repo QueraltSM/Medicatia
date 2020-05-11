@@ -35,8 +35,9 @@
     </head>
     <%
         String state = (String) request.getParameter("state");
+        String userType = (String) request.getParameter("type");
     %>
-    <body onload='getAppointmentsData("<%=state%>")'>
+    <body onload='getAppointmentsData("<%=state%>","<%=userType%>")'>
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 
@@ -118,22 +119,22 @@
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=null">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=null">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=medical&typeU=doctor">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=medical&typeU=doctor">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=nursing&typeU=nurse">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=nursing&typeU=nurse">Pending</a></li>
                                 </ul>
                             </li>
                             <li id="administrators_menu_section">
@@ -168,6 +169,8 @@
                     </div>
                     <!-- /Page Header -->
 
+
+                    
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
@@ -183,7 +186,7 @@
                                                     <th id="actions">Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="doctor_<%=state%>_table" class="nurse_<%=state%>_table"></tbody>
+                                            <tbody id="doctor_<%=state%>_table" class="patient_<%=state%>_table"></tbody>
                                         </table>
                                     </div>
                                 </div>

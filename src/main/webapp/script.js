@@ -359,25 +359,31 @@ function getUsersData(type) {
 
 }
 
-function getAppointmentsData(state) {
+function getAppointmentsData(state, userType) {
     getSessionData();
-
+    //document.getElementById("nullSearch").innerHTML = "<input type='text>";
     sessionStorage.setItem("flag", "false");
 
     if (sessionStorage.getItem("type") === "patient") {
         firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
-            alert(snapshot.key);
+            //alert(snapshot.key);
             snapshot.forEach(function (childX) {
-                alert(childX.key);
+                //alert(childX.key);
                 childX.forEach(function (childY) {
-                    alert(childY.key);
+                    //alert(childY.key);
                     childY.forEach(function (childZ) {
-                        alert(childZ.key);
-
+                        //alert(childZ.key);
+                        //alert();
+                        if(childZ.child("patient").val() === sessionStorage.getItem("id") && childZ.child("state").val() === state
+                                && childZ.child("type").val() === userType){
+                            setAppointmentsData(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
+                        }
                     });
                 });
             });
-
+            if (sessionStorage.getItem("flag") === "false") {
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            }
         });
 
         document.getElementById("appointments_title").innerHTML = "Appointments " + state;
@@ -404,8 +410,9 @@ function getAppointmentsData(state) {
     }
 }
 
-function setAppointmentsData(state, date, hour, patient, reason) {
-    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
+function setAppointmentsData(state, date, hour, user, reason) {
+    
+    firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
         var content = "<tr>" + "<td>" + date + "</td>" +
                 "<td>" + hour + "</td>" +
                 "<td>" + snapshot2.child("name").val() + "</td>" +
