@@ -281,6 +281,8 @@ function storeUIDSelected(uid, action) {
         window.location = "edituser.jsp";
     else if (action === "appointment")
         window.location = "requestAppointment.jsp";
+    else if (action === "medical_history")
+        window.location = "history.jsp";
 }
 
 function uploadPreviewPhoto() {
@@ -385,7 +387,11 @@ function getUsersData(type) {
         snapshot.forEach(function (childX) {
             if (childX.key !== sessionStorage.getItem("id")) {
                 if (childX.child("type").val() === type) {
-                    content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
+                    if (type === "patient") {
+                        content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","medical_history")>' + childX.child("name").val() + "</a></td>";
+                    } else {
+                       content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
+                    }
                     if (type !== "administrator" && type !== "patient") {
                         content += "<td>" + childX.child("speciality").val() + "</td>";
                     }
@@ -400,11 +406,8 @@ function getUsersData(type) {
                 }
             }
         });
-
         $("#" + type + "_table").append(content);
-
     });
-
 }
 
 function setUserData() {
@@ -742,10 +745,15 @@ function storeLastSelectedAppointment(date, time, user, name, subtype, state) {
 
 function setMedicalHistory(){
     getSessionData();
-    firebase.database().ref('MedicalHistory/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+    var uid = sessionStorage.getItem("id");
+    if (sessionStorage.getItem("type") !== "patient") uid = sessionStorage.getItem("id_users");
+    firebase.database().ref('MedicalHistory/' + uid).once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
             if (childX.key==="dni") document.getElementById("dni").innerHTML = childX.val();
-            if (childX.key==="name") document.getElementById("p_name").innerHTML = childX.val();
+            if (childX.key==="name") {
+                document.getElementById("p_name").innerHTML = childX.val();
+                sessionStorage.setItem("patient_history", childX.val());
+            }
             if (childX.key==="sex") document.getElementById("sex").innerHTML = childX.val();
             if (childX.key==="race") document.getElementById("race").innerHTML = childX.val();
             if (childX.key==="birth") document.getElementById("birth").innerHTML = childX.val();
