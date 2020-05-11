@@ -96,7 +96,7 @@ function setUserStyle(type) {
     if (type === "administrator")
         setAdminStyle();
     else {
-        if (document.getElementById("administrators_section")) 
+        if (document.getElementById("administrators_section"))
             document.getElementById("administrators_section").style.display = "none";
         document.getElementById("administrators_menu_section").style.display = "none";
         document.getElementById("adduser_menu_section").style.display = "none";
@@ -104,14 +104,13 @@ function setUserStyle(type) {
         document.getElementById("adduser_menu_section").style.display = "none";
         document.getElementById("medical_appointments_menu_section").style.display = "none";
         document.getElementById("nursing_appointments_menu_section").style.display = "none";
-    
         if (document.getElementById("medical_appointments_section"))
             document.getElementById("medical_appointments_section").style.display = "none";
         if (document.getElementById("nursing_appointments_section"))
             document.getElementById("nursing_appointments_section").style.display = "none";
         if (document.getElementById("appointments_section"))
             document.getElementById("appointments_section").style.display = "block";
-        
+
         if (type === "patient") {
             document.getElementById("appointments_menu_section").style.display = "none";
             if (document.getElementById("appointments_section"))
@@ -143,7 +142,7 @@ function setHomeData() {
     }
 }
 
-function getSessionData(state) {
+function getSessionData() {
     connectToFirebase();
     setUserData();
     setUserStyle(sessionStorage.getItem("type"));
@@ -591,41 +590,68 @@ function searchDoctors() {
     document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
 }
 
-function getAppointments(state) {
+function getAppointmentsData(state, userType) {
     getSessionData();
     sessionStorage.setItem("flag", "false");
-    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
-        alert("-" + snapshot.key);
-        snapshot.forEach(function (childX) {
-            alert("- -" + childX.key);
-            childX.forEach(function (childY) {
-                alert("- - -" + childY.key);
-                if (childY.child("state").val() === state) {
-                    sessionStorage.setItem("flag", "true");
-                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
-                }
+
+    if (sessionStorage.getItem("type") === "patient") {
+        firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                //alert(childX.key);
+                childX.forEach(function (childY) {
+                    childY.forEach(function (childZ) {
+                        if(childZ.child("patient").val() === sessionStorage.getItem("id") && childZ.child("state").val() === state
+                                && childZ.child("type").val() === userType){
+                            sessionStorage.setItem("flag", "true");
+                            setAppointmentsData(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
+                        }
+                    });
+                });
             });
+            if (sessionStorage.getItem("flag") === "false") {
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            }
         });
-        if (sessionStorage.getItem("flag") === "false") {
-            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
-        }
-    });
-    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+
+        document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+
+    } else {
+        firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+            //alert(snapshot.key);
+            snapshot.forEach(function (childX) {
+                //alert(childX.key);
+                childX.forEach(function (childY) {
+                    //alert(childY.key);
+                    if (childY.child("state").val() === state) {
+                        sessionStorage.setItem("flag", "true");
+                        setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
+                    }
+                });
+            });
+            if (sessionStorage.getItem("flag") === "false") {
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            }
+        });
+
+        document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+    }
 }
 
-function setAppointments(state, date, hour, patient, type) { //Poner cita en la tabla
-    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
+function setAppointmentsData(state, date, hour, user, reason) {
+    
+    firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
         var content = "<tr>" + "<td>" + date + "</td>" +
                 "<td>" + hour + "</td>" +
                 "<td>" + snapshot2.child("name").val() + "</td>" +
-                "<td>" + type + "</td>" +
+                "<td>" + reason + "</td>" +
                 '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
                 '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Delete </a></td>' +
                 "</tr>";
-        if(sessionStorage.getItem("type") === "doctor"){
+        if (sessionStorage.getItem("type") === "doctor") {
             $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-        }else{
+        } else {
             $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
         }
+
     });
 }
