@@ -376,6 +376,7 @@ function getAppointmentsData(state, userType) {
                         //alert();
                         if(childZ.child("patient").val() === sessionStorage.getItem("id") && childZ.child("state").val() === state
                                 && childZ.child("type").val() === userType){
+                            sessionStorage.setItem("flag", "true");
                             setAppointmentsData(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
                         }
                     });
