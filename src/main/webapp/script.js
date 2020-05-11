@@ -115,7 +115,7 @@ function setUserStyle(type) {
             document.getElementById("nursing_appointments_section").style.display = "none";
         if (document.getElementById("appointments_section"))
             document.getElementById("appointments_section").style.display = "block";
-
+        document.getElementById("history_menu_section").style.display = "none";
         if (type === "patient") {
             document.getElementById("history_menu_section").style.display = "block";
             document.getElementById("appointments_menu_section").style.display = "none";
@@ -745,9 +745,14 @@ function storeLastSelectedAppointment(date, time, user, name, subtype, state) {
 
 function setMedicalHistory(){
     getSessionData();
-    var uid = sessionStorage.getItem("id");
-    if (sessionStorage.getItem("type") !== "patient") uid = sessionStorage.getItem("id_users");
-    firebase.database().ref('MedicalHistory/' + uid).once('value').then(function (snapshot) {
+    document.getElementById("all_prescriptions").style.display = "none";
+    var id = sessionStorage.getItem("id");
+    document.getElementById("prescribe").style.display = "none";
+    if (sessionStorage.getItem("type") !== "patient") {
+        id = sessionStorage.getItem("id_users");
+        document.getElementById("prescribe").style.display = "block";
+    }
+    firebase.database().ref('MedicalHistory/' + id).once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
             if (childX.key==="dni") document.getElementById("dni").innerHTML = childX.val();
             if (childX.key==="name") {
@@ -768,4 +773,36 @@ function setMedicalHistory(){
             if (childX.key==="diseases") document.getElementById("diseases").innerHTML = childX.val();
         });
     });  
+}
+
+function resetPrescribeMedicationForm() {
+    getSessionData();
+    document.getElementById("patient_name").innerHTML = sessionStorage.getItem("patient_history");
+}
+
+function savePrescription(){
+    // save in storage
+    // ID PATIENT/day-month-year.hh:mm.pdf
+   // save like: patientid.dd-mm-yyyy.hh:mm
+}
+
+function getPrescriptionsFiles() {
+    var content = "";
+    var i;
+    for (i = 0; i < 10; i++) {
+        content += '<a href="http://jornadasciberseguridad.riasc.unileon.es/archivos/ejemplo_esp.pdf" target="_blank">' + "02-05-2020 18:43"+ '</a><br>';
+    }
+    $("#prescriptions_data").append(content);
+}
+
+function showAllPrescriptions() {
+    if (document.getElementById("all_prescriptions").style.display === "block") {
+       document.getElementById("all_prescriptions").style.display = "none"; 
+       document.getElementById("prescriptions_btn").innerHTML = "View";
+       $("#prescriptions_data").empty();
+    } else {
+        document.getElementById("all_prescriptions").style.display = "block";
+        document.getElementById("prescriptions_btn").innerHTML = "Hide";
+        getPrescriptionsFiles();
+    }
 }
