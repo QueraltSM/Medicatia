@@ -361,25 +361,47 @@ function getUsersData(type) {
 
 function getAppointmentsData(state) {
     getSessionData();
-    sessionStorage.setItem("flag", "false");
-    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
-        //alert(snapshot.key);
-        snapshot.forEach(function (childX) {
-            //alert(childX.key);
-            childX.forEach(function (childY) {
-                //alert(childY.key);
-                if (childY.child("state").val() === state) {
-                    sessionStorage.setItem("flag", "true");
-                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
-                }
-            });
-        });
-        if (sessionStorage.getItem("flag") === "false") {
-            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
-        }
-    });
 
-    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+    sessionStorage.setItem("flag", "false");
+
+    if (sessionStorage.getItem("type") === "patient") {
+        firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+            alert(snapshot.key);
+            snapshot.forEach(function (childX) {
+                alert(childX.key);
+                childX.forEach(function (childY) {
+                    alert(childY.key);
+                    childY.forEach(function (childZ) {
+                        alert(childZ.key);
+
+                    });
+                });
+            });
+
+        });
+
+        document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+
+    } else {
+        firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+            //alert(snapshot.key);
+            snapshot.forEach(function (childX) {
+                //alert(childX.key);
+                childX.forEach(function (childY) {
+                    //alert(childY.key);
+                    if (childY.child("state").val() === state) {
+                        sessionStorage.setItem("flag", "true");
+                        setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
+                    }
+                });
+            });
+            if (sessionStorage.getItem("flag") === "false") {
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            }
+        });
+
+        document.getElementById("appointments_title").innerHTML = "Appointments " + state;
+    }
 }
 
 function setAppointmentsData(state, date, hour, patient, reason) {
@@ -391,12 +413,12 @@ function setAppointmentsData(state, date, hour, patient, reason) {
                 '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
                 '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Delete </a></td>' +
                 "</tr>";
-        if(sessionStorage.getItem("type") === "doctor"){
+        if (sessionStorage.getItem("type") === "doctor") {
             $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-        }else{
+        } else {
             $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
         }
-        
+
     });
 }
 
@@ -597,7 +619,7 @@ function searchPatient() {
                 var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
                         "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("email").val() + "</td>" +
-                        "<td>" + "null" + "</td>" +
+                        "<td>" + childX.child("phone").val() + "</td>" +
                         "</tr>";
             }
             $("#patient_table").append(content);
