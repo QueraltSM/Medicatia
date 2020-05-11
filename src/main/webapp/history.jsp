@@ -166,6 +166,12 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">DNI/NIE/NIF</label>
+                                        <div class="col-lg-9">
+                                            <label id="dni"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
                                         <label class="col-lg-3 col-form-label">Name</label>
                                         <div class="col-lg-9">
                                             <label id="p_name"></label>

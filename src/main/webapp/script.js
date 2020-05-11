@@ -6,7 +6,6 @@
  * Néstor
  * Queralt
  */
-
 firebase.auth().onAuthStateChanged(function (user) {
     if (user) {
         var user = firebase.auth().currentUser;
@@ -745,6 +744,7 @@ function setMedicalHistory(){
     getSessionData();
     firebase.database().ref('MedicalHistory/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
+            if (childX.key==="dni") document.getElementById("dni").innerHTML = childX.val();
             if (childX.key==="name") document.getElementById("p_name").innerHTML = childX.val();
             if (childX.key==="sex") document.getElementById("sex").innerHTML = childX.val();
             if (childX.key==="race") document.getElementById("race").innerHTML = childX.val();
