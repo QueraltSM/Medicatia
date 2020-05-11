@@ -338,10 +338,72 @@ function deleteAppointments() {
     location.reload();
 }
 
-function storeDate(date, hour, user) {
+function storeDate(date, hour, user, action) {
+
     sessionStorage.setItem("appointment_date", date);
     sessionStorage.setItem("appointment_hour", hour);
     sessionStorage.setItem("appointment_user", user);
+
+    if (action === "edit") {
+        window.location.replace("editappointments.jsp");
+    }
+}
+
+function editAppointments() {
+    getSessionData();
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user")).once('value').then(function (snapshot) {
+        //alert(snapshot.key);
+        var content = "";
+        snapshot.forEach(function (childX) {
+            //alert(childX.key);
+            childX.forEach(function (childY) {
+                //alert(childY.key);
+                if (childY.child("state").val() === "free" && sessionStorage.getItem("appointment_date_editdate") !== childX.key) {
+                    sessionStorage.setItem("appointment_date_editdate", childX.key);
+                    content += "<option value=" + childX.key + ">" + childX.key + "</option>";
+                }
+            });
+        });
+        $("#appointments_date").append(content);
+    });
+
+}
+
+function select_date_Edit() {
+    var x = document.getElementById("appointments_date").value;
+    sessionStorage.setItem("appointment_date_edit", x);
+    //document.getElementById("prueba").innerHTML = x;
+    $("#appointments_hour").empty();
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + x).once('value').then(function (snapshot) {
+        var content = "";
+        snapshot.forEach(function (childX) {
+            if (childX.child("state").val() === "free") {
+                content += "<option value=" + childX.key + ">" + childX.key + "</option>";
+            }
+        });
+        $("#appointments_hour").append(content);
+    });
+}
+
+function select_hour_Edit() {
+    var x = document.getElementById("appointments_hour").value;
+    //document.getElementById("prueba").innerHTML = x;
+    sessionStorage.setItem("appointment_hour_edit", x);
+}
+
+function finishEdit() {
+    var x = document.getElementById("edit_subtype").value;
+    //document.getElementById("prueba").innerHTML = x;
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date_edit") + '/' +
+            sessionStorage.getItem("appointment_hour_edit")).update({
+        patient: sessionStorage.getItem("id"),
+        state: "pending",
+        subtype: x,
+        type: sessionStorage.getItem("userType")
+
+    });
+    deleteAppointments();
+
 }
 
 
@@ -435,8 +497,8 @@ function setAppointmentsData(state, date, hour, user, reason) {
                 "<td>" + hour + "</td>" +
                 "<td>" + snapshot2.child("name").val() + "</td>" +
                 "<td>" + reason + "</td>" +
-                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
-                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '")>    <i class="fe fe-trash"></i> Delete </a></td>' +
+                '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
                 "</tr>";
         if (sessionStorage.getItem("type") === "doctor") {
             $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);

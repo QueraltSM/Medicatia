@@ -1,6 +1,6 @@
 <%-- 
-    Document   : appointments
-    Created on : 4 may. 2020, 11:16:26
+    Document   : editappointments
+    Created on : 11 may. 2020, 19:07:49
     Author     : charl
 --%>
 
@@ -33,12 +33,7 @@
                 <script src="assets/js/respond.min.js"></script>
         <![endif]-->
     </head>
-    <%
-        String state = (String) request.getParameter("state");
-        String userType = (String) request.getParameter("type");
-        String tableUser = (String) request.getParameter("table");
-    %>
-    <body onload='getAppointmentsData("<%=state%>", "<%=userType%>")'>
+    <body onload="editAppointments()">
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 
@@ -171,25 +166,24 @@
                     <!-- /Page Header -->
 
 
-
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" summary='somefreakydummytext' id="nullAppoinments">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Hour</th>
-                                                    <th><%=tableUser%></th>
-                                                    <th>Reason</th>
-                                                    <th id="actions">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="doctor_<%=state%>_table" class="patient_<%=state%>_table"></tbody>
-                                        </table>
-                                    </div>
+                                    <form id="appointments_change">
+                                        <lavel>Fechas disponibles:</lavel>
+                                        <select id="appointments_date" onchange="select_date_Edit()()">
+
+                                        </select>
+                                        <lavel>Horas disponibles:</lavel>
+                                        <select id="appointments_hour" onblur="select_hour_Edit()">
+
+                                        </select>
+
+                                        <lavel>Motivo de la consulta:</lavel>
+                                        <input type="text" id="edit_subtype">
+                                        <input type="button" onclick="finishEdit()" value="Request">
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -198,28 +192,7 @@
                 </div>
             </div>
 
-        </div>
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <!--	<div class="modal-header">
-                                    <h5 class="modal-title">Delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                    </button>
-                            </div>-->
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary" onclick="deleteAppointments()">Save </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>                                        
+        </div>                                
 
         <!-- /Main Wrapper -->
 
