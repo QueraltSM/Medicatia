@@ -119,22 +119,22 @@
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=null">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=null">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=patient&table=Patient"">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=patient&table=Patient"">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=medical&typeU=doctor">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=medical&typeU=doctor">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=medical">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=medical">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=nursing&typeU=nurse">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=nursing&typeU=nurse">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=nursing">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=nursing">Pending</a></li>
                                 </ul>
                             </li>
                             <li id="administrators_menu_section">
@@ -186,7 +186,7 @@
                                                     <th id="actions">Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="doctor_<%=state%>_table" class="patient_<%=state%>_table"></tbody>
+                                            <tbody id="doctor_<%=state%>_table" class="nurse_<%=state%>_table"></tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -198,8 +198,22 @@
             </div>
 
         </div>
-        <!-- /Main Wrapper -->
-
+        <!-- Delete Modal -->
+        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete</h4>
+                            <p class="mb-4">Are you sure want to delete?</p>
+                            <button type="button" class="btn btn-primary" onclick="deleteAppointments()">Save </button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+        
         <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
 
