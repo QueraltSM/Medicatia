@@ -151,11 +151,8 @@
                     </div>
                 </div>
             </div>
-
-
             <div class="page-wrapper">
                 <div class="content container-fluid">
-
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
@@ -172,8 +169,8 @@
                                     <div class="form-group row">
                                         <label class="col-lg-3 col-form-label">Available dates:</label>
                                         <div class="col-lg-9">
-                                            <select class="select2-container--default" id="appointments_date" onchange="select_date_Edit()()">
-                                                
+                                            <select class="select2-container--default" id="appointments_date" onblur="select_date_Edit()()">
+
                                             </select>
                                         </div>
                                     </div>
@@ -181,7 +178,7 @@
                                         <label class="col-lg-3 col-form-label">Available hours:</label>
                                         <div class="col-lg-9">
                                             <select class="select2-container--default" id="appointments_hour" onblur="select_hour_Edit()">
-                                                
+
                                             </select>
                                         </div>
                                     </div>
