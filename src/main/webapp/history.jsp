@@ -239,8 +239,8 @@
         <!-- Select2 JS -->
         <script src="assets/js/select2.min.js"></script>
         <!-- Custom JS -->
-        <script  src="assets/js/script.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+        <script  src="assets/js/script.js"></script>        
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
         <script src="script.js"></script>
     </body>
 </html>

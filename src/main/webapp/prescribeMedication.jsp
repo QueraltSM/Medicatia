@@ -138,9 +138,9 @@
                                     <h4 class="card-title" id="patient_name"></h4>
                                 </div>
                                 <div class="card-body">
-                                    <form onsubmit="addPrescription(); return false">
+                                    <form onsubmit="savePrescription(); return false">
                                         <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label">File prescription</label>
+                                            <label class="col-lg-3 col-form-label">Prescription</label>
                                             <div class="col-lg-9">
                                                 <input type="file" accept="application/pdf" id="prescription_pdf">
                                             </div>
@@ -167,7 +167,7 @@
         <script src="assets/js/select2.min.js"></script>
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
         <script src="script.js"></script>
     </body>
 </html>

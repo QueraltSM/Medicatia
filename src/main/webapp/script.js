@@ -391,7 +391,7 @@ function getUsersData(type) {
                     if (type === "patient") {
                         content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","medical_history")>' + childX.child("name").val() + "</a></td>";
                     } else {
-                       content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
+                        content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
                     }
                     if (type !== "administrator" && type !== "patient") {
                         content += "<td>" + childX.child("speciality").val() + "</td>";
@@ -744,7 +744,7 @@ function storeLastSelectedAppointment(date, time, user, name, subtype, state) {
     window.location = "editappointment.jsp";
 }
 
-function setMedicalHistory(){
+function setMedicalHistory() {
     getSessionData();
     document.getElementById("all_prescriptions").style.display = "none";
     var id = sessionStorage.getItem("id");
@@ -755,25 +755,38 @@ function setMedicalHistory(){
     }
     firebase.database().ref('MedicalHistory/' + id).once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
-            if (childX.key==="dni") document.getElementById("dni").innerHTML = childX.val();
-            if (childX.key==="name") {
+            if (childX.key === "dni")
+                document.getElementById("dni").innerHTML = childX.val();
+            if (childX.key === "name") {
                 document.getElementById("p_name").innerHTML = childX.val();
                 sessionStorage.setItem("patient_history", childX.val());
             }
-            if (childX.key==="sex") document.getElementById("sex").innerHTML = childX.val();
-            if (childX.key==="race") document.getElementById("race").innerHTML = childX.val();
-            if (childX.key==="birth") document.getElementById("birth").innerHTML = childX.val();
-            if (childX.key==="email") document.getElementById("email").innerHTML = childX.val();
-            if (childX.key==="phone") document.getElementById("phone").innerHTML = childX.val();
-            if (childX.key==="place_of_birth") document.getElementById("p_birth").innerHTML = childX.val();
-            if (childX.key==="place_of_residence") document.getElementById("p_residence").innerHTML = childX.val();
-            if (childX.key==="weight") document.getElementById("weight").innerHTML = childX.val();
-            if (childX.key==="height") document.getElementById("height").innerHTML = childX.val();
-            if (childX.key==="marital_status") document.getElementById("marital_status").innerHTML = childX.val();
-            if (childX.key==="allergies") document.getElementById("allergies").innerHTML = childX.val();
-            if (childX.key==="diseases") document.getElementById("diseases").innerHTML = childX.val();
+            if (childX.key === "sex")
+                document.getElementById("sex").innerHTML = childX.val();
+            if (childX.key === "race")
+                document.getElementById("race").innerHTML = childX.val();
+            if (childX.key === "birth")
+                document.getElementById("birth").innerHTML = childX.val();
+            if (childX.key === "email")
+                document.getElementById("email").innerHTML = childX.val();
+            if (childX.key === "phone")
+                document.getElementById("phone").innerHTML = childX.val();
+            if (childX.key === "place_of_birth")
+                document.getElementById("p_birth").innerHTML = childX.val();
+            if (childX.key === "place_of_residence")
+                document.getElementById("p_residence").innerHTML = childX.val();
+            if (childX.key === "weight")
+                document.getElementById("weight").innerHTML = childX.val();
+            if (childX.key === "height")
+                document.getElementById("height").innerHTML = childX.val();
+            if (childX.key === "marital_status")
+                document.getElementById("marital_status").innerHTML = childX.val();
+            if (childX.key === "allergies")
+                document.getElementById("allergies").innerHTML = childX.val();
+            if (childX.key === "diseases")
+                document.getElementById("diseases").innerHTML = childX.val();
         });
-    });  
+    });
 }
 
 function resetPrescribeMedicationForm() {
@@ -781,26 +794,41 @@ function resetPrescribeMedicationForm() {
     document.getElementById("patient_name").innerHTML = sessionStorage.getItem("patient_history");
 }
 
-function savePrescription(){
-    // save in storage
-    // ID PATIENT/day-month-year.hh:mm.pdf
-   // save like: patientid.dd-mm-yyyy.hh:mm
+function savePrescription() {
+    var id = sessionStorage.getItem("id_users");
+    var d = new Date();
+    var datetime = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + "." + d.getHours() + ":" + d.getMinutes();
+    var file = document.getElementById("prescription_pdf").files[0];
+    var thisRef = firebase.storage().ref().child(id + "/_" + datetime + "_");
+    thisRef.put(file).then(function (snapshot) {
+        window.location = "history.jsp";
+    });
 }
 
 function getPrescriptionsFiles() {
-    var content = "";
-    var i;
-    for (i = 0; i < 10; i++) {
-        content += '<a href="http://jornadasciberseguridad.riasc.unileon.es/archivos/ejemplo_esp.pdf" target="_blank">' + "02-05-2020 18:43"+ '</a><br>';
+    var id = sessionStorage.getItem("id");
+    if (sessionStorage.getItem("type") !== "patient") {
+        id = sessionStorage.getItem("id_users");
     }
-    $("#prescriptions_data").append(content);
+    var content = "";
+     firebase.storage().ref().child(id).listAll().then(function (res) {
+        res.items.forEach(function (itemRef) {
+            itemRef.getDownloadURL().then(function (url) {
+                var filename =  url.substring(url.indexOf("_")+1, url.lastIndexOf("_")).split('-').join("/").split('.').join(" ").split('%3A').join(":");
+                content += '<a href="'+url+'" target="_blank">' + filename + '</a><br>';
+                $("#prescriptions_data").append(content);
+            });
+        });
+    }).catch(function (error) {
+    });
+    
 }
 
 function showAllPrescriptions() {
     if (document.getElementById("all_prescriptions").style.display === "block") {
-       document.getElementById("all_prescriptions").style.display = "none"; 
-       document.getElementById("prescriptions_btn").innerHTML = "View";
-       $("#prescriptions_data").empty();
+        document.getElementById("all_prescriptions").style.display = "none";
+        document.getElementById("prescriptions_btn").innerHTML = "View";
+        $("#prescriptions_data").empty();
     } else {
         document.getElementById("all_prescriptions").style.display = "block";
         document.getElementById("prescriptions_btn").innerHTML = "Hide";
