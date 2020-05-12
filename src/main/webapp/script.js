@@ -335,7 +335,15 @@ function deleteAppointments() {
         state: "free",
         type: sessionStorage.getItem("userType")
     });
-    location.reload();
+    if(sessionStorage.getItem("flag3") === "true" && sessionStorage.getItem("userType") === "medical"){
+        sessionStorage.setItem("flag3", "false");
+        window.location.replace("appointments.jsp?state=" + sessionStorage.getItem("appointment_state") + "&type=medical&table=Doctor");
+    }else if(sessionStorage.getItem("flag3") === "true" && sessionStorage.getItem("userType") === "nursing"){
+                sessionStorage.setItem("flag3", "false");
+                window.location.replace("appointments.jsp?state="+ sessionStorage.getItem("appointment_state") + "&type=nursing&table=Nurse");
+    }else{
+        location.reload();
+    }
 }
 
 function storeDate(date, hour, user, action) {
@@ -366,7 +374,8 @@ function editAppointments() {
         });
         $("#appointments_date").append(content);
     });
-
+    document.getElementById("edit_appointments_title").innerHTML = "Change appointment " + sessionStorage.getItem("appointment_date")
+            + " " + sessionStorage.getItem("appointment_hour");
 }
 
 function select_date_Edit() {
@@ -402,8 +411,8 @@ function finishEdit() {
         type: sessionStorage.getItem("userType")
 
     });
+    sessionStorage.setItem("flag3", "true");
     deleteAppointments();
-
 }
 
 
@@ -442,6 +451,7 @@ function getAppointmentsData(state, userType) {
     //document.getElementById("nullSearch").innerHTML = "<input type='text>";
     sessionStorage.setItem("flag", "false");
     sessionStorage.setItem("userType", userType);
+    sessionStorage.setItem("appointment_state", state);
 
     if (sessionStorage.getItem("type") === "patient") {
         firebase.database().ref('Appointments/').once('value').then(function (snapshot) {

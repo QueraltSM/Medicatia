@@ -27,6 +27,7 @@
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
+        <link rel="stylesheet" href="assets/css/select2.min.css">
 
         <!--[if lt IE 9]>
                 <script src="assets/js/html5shiv.min.js"></script>
@@ -159,40 +160,49 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h3 class="page-title" id="appointments_title"></h3>
+                                <h3 class="page-title" id="edit_appointments_title"></h3>
                             </div>
                         </div>
                     </div>
-                    <!-- /Page Header -->
-
 
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card">
+                        <div class="col-xl-12 d-flex">
+                            <div class="card flex-fill">
                                 <div class="card-body">
-                                    <form id="appointments_change">
-                                        <lavel>Available dates:</lavel>
-                                        <select id="appointments_date" onchange="select_date_Edit()()">
-
-                                        </select>
-                                        <lavel>Available hours</lavel>
-                                        <select id="appointments_hour" onblur="select_hour_Edit()">
-
-                                        </select>
-
-                                        <lavel>Reason:</lavel>
-                                        <input type="text" id="edit_subtype">
-                                        <input type="button" onclick="finishEdit()" value="Request">
-                                    </form>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Available dates:</label>
+                                        <div class="col-lg-9">
+                                            <select class="select2-container--default" id="appointments_date" onchange="select_date_Edit()()">
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Available hours:</label>
+                                        <div class="col-lg-9">
+                                            <select class="select2-container--default" id="appointments_hour" onblur="select_hour_Edit()">
+                                                
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Reason:</label>
+                                        <div class="col-lg-9">
+                                            <input class="form-control" type="text" id="edit_subtype">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <input type="button" class="btn btn-primary" onclick="finishEdit()" value="Request">
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
+        </div>
 
-        </div>                                
+
 
         <!-- /Main Wrapper -->
 
