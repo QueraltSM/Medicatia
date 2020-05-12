@@ -690,7 +690,7 @@ function deleteAppointments() {
         state: "free",
         type: sessionStorage.getItem("userType")
     });
-    //location.reload();
+    location.reload();
 }
 
 function storeDate(date, hour, user) {
