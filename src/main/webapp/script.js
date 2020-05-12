@@ -593,6 +593,13 @@ function searchDoctors() {
 function getAppointmentsData(state, userType) {
     getSessionData();
     sessionStorage.setItem("flag", "false");
+    if(userType === null){
+        if(sessionStorage.getItem("type") === "doctor"){
+            userType = "medical";
+        }else{
+            userType = "nursing";
+        }
+    }
     sessionStorage.setItem("userType", userType);
     if (sessionStorage.getItem("type") === "patient") {
         firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
@@ -638,32 +645,52 @@ function getAppointmentsData(state, userType) {
 }
 
 function setAppointmentsData(state, date, hour, user, reason) {
-    firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
-        var content = "<tr>" + "<td>" + date + "</td>" +
-                "<td>" + hour + "</td>" +
-                "<td>" + snapshot2.child("name").val() + "</td>" +
-                "<td>" + reason + "</td>" +
-                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
-                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '")> <i class="fe fe-trash"></i> Delete </a></td>' +
-                "</tr>";
-        if (sessionStorage.getItem("type") === "doctor") {
-            $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-        } else {
-            $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-        }
+     if (sessionStorage.getItem("type") === "patient") {
 
-    });
+        firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
+            var content = "<tr>" + "<td>" + date + "</td>" +
+                    "<td>" + hour + "</td>" +
+                    "<td>" + snapshot2.child("name").val() + "</td>" +
+                    "<td>" + reason + "</td>" +
+                    '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
+                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
+                    "</tr>";
+            if (sessionStorage.getItem("type") === "doctor") {
+                $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+            } else {
+                $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+            }
+
+        });
+    } else {
+        firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
+            var content = "<tr>" + "<td>" + date + "</td>" +
+                    "<td>" + hour + "</td>" +
+                    "<td>" + snapshot2.child("name").val() + "</td>" +
+                    "<td>" + reason + "</td>" +
+                    '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
+                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
+                    "</tr>";
+            if (sessionStorage.getItem("type") === "doctor") {
+                $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+            } else {
+                $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+            }
+
+        });
+    }
 }
 
 //Starting HU11
 
 function deleteAppointments() {
+    //alert("Hola");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "free",
         type: sessionStorage.getItem("userType")
     });
-    location.reload();
+    //location.reload();
 }
 
 function storeDate(date, hour, user) {

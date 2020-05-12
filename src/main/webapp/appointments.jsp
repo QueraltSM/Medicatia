@@ -36,6 +36,7 @@
     <%
         String state = (String) request.getParameter("state");
         String userType = (String) request.getParameter("type");
+        String tableUser = (String) request.getParameter("table");
     %>
     <body onload='getAppointmentsData("<%=state%>","<%=userType%>")'>
         <!-- Main Wrapper -->
@@ -119,8 +120,8 @@
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=patient&table=Patient"">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=patient&table=Patient"">Pending</a></li>
+                                    <li><a href="appointments.jsp?state=accepted&type=patient&table=Patient">Accepted</a></li>
+                                    <li><a href="appointments.jsp?state=pending&type=patient&table=Patient">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu"  id="medical_appointments_menu_section">
@@ -181,7 +182,7 @@
                                                 <tr>
                                                     <th>Date</th>
                                                     <th>Hour</th>
-                                                    <th>Patient</th>
+                                                    <th><%=tableUser%></th>
                                                     <th>Reason</th>
                                                     <th id="actions">Actions</th>
                                                 </tr>
