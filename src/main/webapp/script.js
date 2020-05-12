@@ -655,3 +655,5 @@ function setAppointmentsData(state, date, hour, user, reason) {
 
     });
 }
+
+//Starting HU11
