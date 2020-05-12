@@ -607,8 +607,8 @@ function setAppointmentsData(state, date, hour, patient, reason) {
                 "<td>" + hour + "</td>" +
                 "<td>" + snapshot2.child("name").val() + "</td>" +
                 "<td>" + reason + "</td>" +
-                '<td><a class="btn btn-sm bg-primary-light mr-2" href="#confirm_modal"> <i class="fe fe-check"></i> Confirm</a>' +
-                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#cancel_modal">    <i class="fe fe-trash"></i> Cancel </a></td>' +
+                '<td><a class="btn btn-sm bg-primary-light mr-2" data-toggle="modal" href="#confirm_modal" onclick=storeAppointment("' + hour + '","' + date + '","' + sessionStorage.getItem("id") + '","' + patient + '")> <i class="fe fe-check"></i> Confirm</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#cancel_modal" onclick=storeAppointment("' + hour + '","' + date + '","' + sessionStorage.getItem("id") + '")>    <i class="fe fe-trash"></i> Cancel </a></td>' +
                 "</tr>";
             
         }
@@ -622,10 +622,38 @@ function setAppointmentsData(state, date, hour, patient, reason) {
     });
 }
 
-function cancelAppointment(){
-    alert("Canceled");
+
+function storeAppointment(hour, date, user, patient){
+    sessionStorage.setItem("appointment_date", date);
+    sessionStorage.setItem("appointment_hour", hour);
+    sessionStorage.setItem("appointment_user", user);
+    sessionStorage.setItem("appointment_patient", patient);
+    
+    var content='<a>"'+hour+'"</a>';
+    $("#appointment_data").append(content);
+    
+}
+
+function deleteAppointment(){
+    
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).remove().then(function () {
+
+    }).catch(function (error) {
+        alert(error);
+    });
+    location.reload();
+        
 }
 
 function confirmAppointment(){
-    alert("Confirmed");
+
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).set({
+        state: "accepted",
+        patient: sessionStorage.getItem("appointment_patient"),
+        type: sessionStorage.getItem("userType")
+    });
+    location.reload();
+    
 }
