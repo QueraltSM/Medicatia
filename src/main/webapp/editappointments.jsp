@@ -171,16 +171,16 @@
                             <div class="card">
                                 <div class="card-body">
                                     <form id="appointments_change">
-                                        <lavel>Fechas disponibles:</lavel>
+                                        <lavel>Available dates:</lavel>
                                         <select id="appointments_date" onchange="select_date_Edit()()">
 
                                         </select>
-                                        <lavel>Horas disponibles:</lavel>
+                                        <lavel>Available hours</lavel>
                                         <select id="appointments_hour" onblur="select_hour_Edit()">
 
                                         </select>
 
-                                        <lavel>Motivo de la consulta:</lavel>
+                                        <lavel>Reason:</lavel>
                                         <input type="text" id="edit_subtype">
                                         <input type="button" onclick="finishEdit()" value="Request">
                                     </form>
