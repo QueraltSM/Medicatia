@@ -399,7 +399,7 @@ function getUsersData(type) {
                     content += "<td>" + childX.child("phone").val() + "</td>";
                     if (sessionStorage.getItem("type") === "administrator") {
                         document.getElementById("actions").style.display = "flex";
-                        content += '<a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + childX.key + '","medical_history")> <i class="fe fe-file"></i> View medical history</a>' + '<a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + childX.key + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
+                        content += '<a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + childX.key + '","medical_history")> <i class="fe fe-eye"></i> View medical history</a>' + '<a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + childX.key + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
                                 '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + childX.key + '")>    <i class="fe fe-trash"></i> Delete </a></td>' +
                                 "</tr>";
                     }
@@ -711,7 +711,7 @@ function setAppointment(date, time, user, subtype, state) {
         if (state === "accepted") {
             name = name.replace(" ", ":");
             subtype = subtype.replace(" ", ":");
-            content += '<td><a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + user + '","medical_history")> <i class="fe fe-file"></i> View medical history</a><a class="btn btn-sm bg-success-light mr-2" onclick=storeLastSelectedAppointment("' + date + '","' + time + '","' + user + '","' + name + '","' + subtype + '","' + state + '")> <i class="fe fe-pencil"></i> Edit</a>' +
+            content += '<td><a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + user + '","medical_history")> <i class="fe fe-eye"></i> View medical history</a><a class="btn btn-sm bg-success-light mr-2" onclick=storeLastSelectedAppointment("' + date + '","' + time + '","' + user + '","' + name + '","' + subtype + '","' + state + '")> <i class="fe fe-pencil"></i> Edit</a>' +
                     '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + user + '")><i class="fe fe-trash"></i> Delete </a></td></tr>';
         } else {
             content += '<td><a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + user + '","edit")> <i class="fe fe-pencil"></i> Accept</a>' +
