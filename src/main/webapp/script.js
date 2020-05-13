@@ -810,13 +810,11 @@ function getPrescriptionsFiles() {
     if (sessionStorage.getItem("type") !== "patient") {
         id = sessionStorage.getItem("id_users");
     }
-    var content = "";
      firebase.storage().ref().child(id).listAll().then(function (res) {
         res.items.forEach(function (itemRef) {
             itemRef.getDownloadURL().then(function (url) {
                 var filename =  url.substring(url.indexOf("_")+1, url.lastIndexOf("_")).split('-').join("/").split('.').join(" ").split('%3A').join(":");
-                content += '<a href="'+url+'" target="_blank">' + filename + '</a><br>';
-                $("#prescriptions_data").append(content);
+                $("#prescriptions_data").append('<a href="'+url+'" target="_blank">' + filename + '</a><br>');
             });
         });
     }).catch(function (error) {
