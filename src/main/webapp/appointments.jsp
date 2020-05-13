@@ -197,7 +197,7 @@
                     <div class="modal-body">
                         <div class="form-content p-2">
                             <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to cancel the appointment at <a id="appointment_data"></a>?</p>
+                            <p class="mb-4">Are you sure want to cancel this appointment?</p>
                             <button type="button" class="btn btn-primary" onclick="deleteAppointment()">Cancel</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
@@ -219,7 +219,22 @@
                     </div>
                 </div>
             </div>
-        </div>                                
+        </div>  
+                                        
+        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete</h4>
+                            <p class="mb-4">Are you sure want to free tihs appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="freeAppointment()">Confirm</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>                                     
         <!-- /Main Wrapper -->
 
         <!-- jQuery -->
