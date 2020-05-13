@@ -197,8 +197,8 @@
                     <div class="modal-body">
                         <div class="form-content p-2">
                             <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to cancel this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="cancelAppointment()">Cancel</button>
+                            <p class="mb-4">Are you sure want to cancel the appointment at <a id="appointment_data"></a>?</p>
+                            <button type="button" class="btn btn-primary" onclick="deleteAppointment()">Cancel</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
