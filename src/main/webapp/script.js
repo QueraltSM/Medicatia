@@ -698,3 +698,5 @@ function storeDate(date, hour, user) {
     sessionStorage.setItem("appointment_hour", hour);
     sessionStorage.setItem("appointment_user", user);
 }
+
+//Starting HU4
