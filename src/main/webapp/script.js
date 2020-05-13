@@ -681,8 +681,6 @@ function setAppointmentsData(state, date, hour, user, reason) {
     }
 }
 
-//Starting HU11
-
 function deleteAppointments() {
     //alert("Hola");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
@@ -699,4 +697,17 @@ function storeDate(date, hour, user) {
     sessionStorage.setItem("appointment_user", user);
 }
 
-//Starting HU4
+function confirmAppointment(){
+    alert("Entra en confirmar");
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).set({
+        state: "accepted",
+        patient: sessionStorage.getItem("appointment_patient"),
+        type: sessionStorage.getItem("userType")
+    });
+    location.reload();
+}
+
+function cancelAppointment(){
+    
+}
