@@ -117,6 +117,9 @@
                             <li id="adduser_menu_section">
                                 <a href="adduser.jsp"><i class="fe fe-user-plus"></i> <span>User</span></a>
                             </li>
+                            <li id="history_menu_section">
+                                <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
+                            </li>
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
@@ -187,7 +190,7 @@
                                                     <th id="actions">Actions</th>
                                                 </tr>
                                             </thead>
-                                            <tbody id="doctor_<%=state%>_table" class="patient_<%=state%>_table"></tbody>
+                                            <tbody id="doctor_<%=state%>_table" class="nurse_<%=state%>_table"></tbody>
                                         </table>
                                     </div>
                                 </div>

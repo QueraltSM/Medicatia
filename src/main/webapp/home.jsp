@@ -106,6 +106,9 @@
                             <li id="adduser_menu_section">
                                 <a href="adduser.jsp"><i class="fe fe-user-plus"></i> <span>User</span></a>
                             </li>
+                            <li id="history_menu_section">
+                                <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
+                            </li>
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
@@ -127,7 +130,7 @@
                                     <li><a href="appointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
                             </li>
-                           <li id="administrators_menu_section">
+                            <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -139,7 +142,7 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
+
                         </ul>
                     </div>
                 </div>
@@ -233,7 +236,7 @@
                                     </div></a>
                             </div>
                         </div>     
-                        
+
                         <div class="col-xl-3 col-sm-6 col-12" id="medical_appointments_section">
                             <div class="card">
                                 <a href="appointments.jsp?t=medical" style="color:black;"><div class="card-body" >
@@ -251,7 +254,7 @@
                                     </div></a>
                             </div>
                         </div>     
-                        
+
                         <div class="col-xl-3 col-sm-6 col-12" id="nursing_appointments_section">
                             <div class="card">
                                 <a href="appointments.jsp?t=nursing" style="color:black;"><div class="card-body" >
@@ -269,8 +272,8 @@
                                     </div></a>
                             </div>
                         </div>  
-                        
-                       
+
+
                         <div class="col-xl-3 col-sm-6 col-12" id="administrators_section">
                             <div class="card">
                                 <a href="administrators.jsp" style="color:black;"><div class="card-body">

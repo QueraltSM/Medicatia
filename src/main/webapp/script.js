@@ -69,6 +69,7 @@ function connectToFirebase() {
 
 function setAdminStyle() {
     document.getElementById("adduser_menu_section").style.display = "block";
+    document.getElementById("history_menu_section").style.display = "none";
     if (document.getElementById("administrators_section"))
         document.getElementById("administrators_section").style.display = "block";
     if (document.getElementById("doctors_section"))
@@ -110,8 +111,9 @@ function setUserStyle(type) {
             document.getElementById("nursing_appointments_section").style.display = "none";
         if (document.getElementById("appointments_section"))
             document.getElementById("appointments_section").style.display = "block";
-
+            document.getElementById("history_menu_section").style.display = "none";
         if (type === "patient") {
+            document.getElementById("history_menu_section").style.display = "block";
             document.getElementById("appointments_menu_section").style.display = "none";
             if (document.getElementById("appointments_section"))
                 document.getElementById("appointments_section").style.display = "none";
@@ -330,11 +332,13 @@ function deleteUser() {
 }
 
 function deleteAppointments() {
+
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "free",
         type: sessionStorage.getItem("userType")
     });
+    
     if (sessionStorage.getItem("flag3") === "true" && sessionStorage.getItem("userType") === "medical") {
         sessionStorage.setItem("flag3", "false");
         window.location.replace("appointments.jsp?state=" + sessionStorage.getItem("appointment_state") + "&type=medical&table=Doctor");
@@ -355,6 +359,11 @@ function storeDate(date, hour, user, action) {
     if (action === "edit") {
         window.location.replace("editappointments.jsp");
     }
+    if (action === "view"){
+        window.location.replace("history.jsp");
+    }
+    
+    
 }
 
 function editAppointments() {
@@ -401,7 +410,6 @@ function select_hour_Edit() {
 
 function finishEdit() {
     var x = document.getElementById("edit_subtype").value;
-    //document.getElementById("prueba").innerHTML = x;
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date_edit") + '/' +
             sessionStorage.getItem("appointment_hour_edit")).update({
         patient: sessionStorage.getItem("id"),
@@ -423,9 +431,12 @@ function getUsersData(type) {
         snapshot.forEach(function (childX) {
             if (childX.key !== sessionStorage.getItem("id")) {
                 if (childX.child("type").val() === type) {
-                    content += "<tr>" + "<td>" + childX.child("dni").val() + "</td>" +
-                            "<td>" + childX.child("name").val() + "</td>";
-                    if (type !== "administrator" || type !== "patient") {
+            if (type === "patient") {
+                        content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","medical_history")>' + childX.child("name").val() + "</a></td>";
+                    } else {
+                        content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
+                    }
+                    if (type !== "administrator" && type !== "patient") {
                         content += "<td>" + childX.child("speciality").val() + "</td>";
                     }
                     content += "<td>" + childX.child("phone").val() + "</td>";
@@ -435,14 +446,12 @@ function getUsersData(type) {
                                 '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + childX.key + '")>    <i class="fe fe-trash"></i> Delete </a></td>' +
                                 "</tr>";
                     }
+                    content += "</a>";
                 }
             }
         });
-
         $("#" + type + "_table").append(content);
-
     });
-
 }
 
 function getAppointmentsData(state, userType) {
@@ -460,6 +469,7 @@ function getAppointmentsData(state, userType) {
     sessionStorage.setItem("appointment_state", state);
 
     if (sessionStorage.getItem("type") === "patient") {
+
         firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
             //alert(snapshot.key);
             snapshot.forEach(function (childX) {
@@ -532,8 +542,9 @@ function setAppointmentsData(state, date, hour, user, reason) {
                     "<td>" + snapshot2.child("name").val() + "</td>" +
                     "<td>" + reason + "</td>" +
                     '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
-                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
-                    "</tr>";
+                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","delete")> <i class="fe fe-trash"></i> Delete</a> ' +
+                    ' <a class="btn btn-sm bg-primary-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","view")> <i class="fe fe-eye"></i> View history</a></td>' 
+                    + "</tr>";
             if (sessionStorage.getItem("type") === "doctor") {
                 $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
             } else {
@@ -553,6 +564,44 @@ function setUserData() {
         document.getElementById('imagenU2').src = url;
     }).catch(function (error) {
         document.getElementById("error").innerHTML = error;
+    });
+}
+
+function setMedicalHistory() {
+    getSessionData();
+    firebase.database().ref('MedicalHistory/' + sessionStorage.getItem("appointment_user")).once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            if (childX.key === "dni")
+                document.getElementById("dni").innerHTML = childX.val();
+            if (childX.key === "name") {
+                document.getElementById("p_name").innerHTML = childX.val();
+                //sessionStorage.setItem("patient_history", childX.val());
+            }
+            if (childX.key === "sex")
+                document.getElementById("sex").innerHTML = childX.val();
+            if (childX.key === "race")
+                document.getElementById("race").innerHTML = childX.val();
+            if (childX.key === "birth")
+                document.getElementById("birth").innerHTML = childX.val();
+            if (childX.key === "email")
+                document.getElementById("email").innerHTML = childX.val();
+            if (childX.key === "phone")
+                document.getElementById("phone").innerHTML = childX.val();
+            if (childX.key === "place_of_birth")
+                document.getElementById("p_birth").innerHTML = childX.val();
+            if (childX.key === "place_of_residence")
+                document.getElementById("p_residence").innerHTML = childX.val();
+            if (childX.key === "weight")
+                document.getElementById("weight").innerHTML = childX.val();
+            if (childX.key === "height")
+                document.getElementById("height").innerHTML = childX.val();
+            if (childX.key === "marital_status")
+                document.getElementById("marital_status").innerHTML = childX.val();
+            if (childX.key === "allergies")
+                document.getElementById("allergies").innerHTML = childX.val();
+            if (childX.key === "diseases")
+                document.getElementById("diseases").innerHTML = childX.val();
+        });
     });
 }
 

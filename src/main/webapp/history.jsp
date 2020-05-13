@@ -1,38 +1,31 @@
+<%-- 
+    Document   : history
+    Created on : 13 may. 2020, 12:26:49
+    Author     : charl
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
-
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-
         <!-- Feathericon CSS -->
         <link rel="stylesheet" href="assets/css/feathericon.min.css">
-
-        <!-- Datatables CSS -->
-        <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
-
+        <!-- Select2 CSS -->
+        <link rel="stylesheet" href="assets/css/select2.min.css">
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
-
     </head>
-    <body onload='getUsersData("patient")'>
-
-        <!-- Main Wrapper -->
+    <body onload="setMedicalHistory()">
         <div class="main-wrapper">
-
-            <!-- Header -->
             <div class="header">
-
-                <!-- Logo -->
                 <div class="header-left">
                     <a href="home.jsp" class="logo">
                         <img src="assets/img/medicatia_menu.jpg" alt="Logo">
@@ -41,28 +34,13 @@
                         <img src="assets/img/logo-small.png" alt="Logo" width="30" height="30">
                     </a>
                 </div>
-                <!-- /Logo -->
-
                 <a href="javascript:void(0);" id="toggle_btn">
                     <i class="fe fe-text-align-left"></i>
                 </a>
-
-                <div class="top-nav-search">
-                    <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-
-                <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
                     <i class="fa fa-bars"></i>
                 </a>
-                <!-- /Mobile Menu Toggle -->
-
-                <!-- Header Right Menu -->
                 <ul class="nav user-menu">
-                    <!-- User Menu -->
                     <li class="nav-item dropdown has-arrow">
                         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                             <span class="user-img"><img class="rounded-circle"  width="31" id="imagenU"></span>
@@ -82,14 +60,8 @@
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
                     </li>
-                    <!-- /User Menu -->
-
                 </ul>
-                <!-- /Header Right Menu -->
-
             </div>
-            <!-- /Header -->
-            <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -144,95 +116,138 @@
                     </div>
                 </div>
             </div>
-            <!-- /Sidebar -->
-            <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
-
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <h3 class="page-title">List of Patients</h3>
-
+                            <div class="col">
+                                <h3 class="page-title">Medical History</h3>
                             </div>
                         </div>
                     </div>
-                    <!-- /Page Header -->
-
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card">
+                        <div class="col-xl-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h4 class="card-title">Patient Information</h4>
+                                </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <div class="table-responsive">
-                                            <table class="table table-hover table-center mb-0" id="tbl">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Phone</th>
-                                                        <th id="actions">Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="patient_table">
-                                                </tbody>
-                                            </table>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">DNI/NIE/NIF</label>
+                                        <div class="col-lg-9">
+                                            <label id="dni"></label>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Name</label>
+                                        <div class="col-lg-9">
+                                            <label id="p_name"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Sex</label>
+                                        <div class="col-lg-9">
+                                            <label id="sex"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Race</label>
+                                        <div class="col-lg-9">
+                                            <label id="race"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Birth</label>
+                                        <div class="col-lg-9">
+                                            <label id="birth"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Email</label>
+                                        <div class="col-lg-9">
+                                            <label id="email"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Phone</label>
+                                        <div class="col-lg-9">
+                                            <label id="phone"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Place of birth</label>
+                                        <div class="col-lg-9">
+                                            <label id="p_birth"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Place of residence</label>
+                                        <div class="col-lg-9">
+                                            <label id="p_residence"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Weight</label>
+                                        <div class="col-lg-9">
+                                            <label id="weight"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Height</label>
+                                        <div class="col-lg-9">
+                                            <label id="height"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Marital status</label>
+                                        <div class="col-lg-9">
+                                            <label id="marital_status"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Allergies</label>
+                                        <div class="col-lg-9">
+                                            <label id="allergies"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Disease</label>
+                                        <div class="col-lg-9">
+                                            <label id="diseases"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-lg-3 col-form-label">Recipe prescriptions</label>
+                                        <button onclick="showAllPrescriptions()" type="submit" class="btn btn-primary" id="prescriptions_btn">View</button>
+                                    </div>
+                                    <div class="form-group row" id="all_prescriptions">
+                                        <label class="col-lg-3 col-form-label">All prescriptions</label>
+                                        <div class="col-lg-9">
+                                            <label id="prescriptions_data"></label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <a href="prescribeMedication.jsp" class="btn btn-primary" id="prescribe">Prescribe medication</a>
+                                   </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-            <!-- /Page Wrapper -->
-        </div>
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <!--	<div class="modal-header">
-                                    <h5 class="modal-title">Delete</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                    </button>
-                            </div>-->
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary">Save </button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-        <!-- /Delete Modal -->
-
-
-        <!-- /Main Wrapper -->
-
-        <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
-
         <!-- Bootstrap Core JS -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-        <!-- Datatables JS -->
-        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/datatables/datatables.min.js"></script>
-
+        <!-- Select2 JS -->
+        <script src="assets/js/select2.min.js"></script>
         <!-- Custom JS -->
-        <script  src="assets/js/script.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+        <script  src="assets/js/script.js"></script>        
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
         <script src="script.js"></script>
     </body>
-
-    <!-- Mirrored from dreamguys.co.in/demo/doccure/admin/patient-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 24 Dec 2019 21:07:49 GMT -->
 </html>
