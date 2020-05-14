@@ -38,7 +38,8 @@
         String userType = (String) request.getParameter("type");
         String tableUser = (String) request.getParameter("table");
     %>
-    <body onload='getAppointmentsData("<%=state%>","<%=userType%>")'>
+    
+    <body onload='getAppointmentsData("<%=state%>")'>
         <!-- Main Wrapper -->
         <div class="main-wrapper">
 
@@ -124,20 +125,20 @@
                                     <li><a href="appointments.jsp?state=pending&type=patient&table=Patient">Pending</a></li>
                                 </ul>
                             </li>
-                            <li class="has-submenu"  id="medical_appointments_menu_section">
+                             <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="appointments.jsp?state=accepted&type=medical">Accepted</a></li>
                                     <li><a href="appointments.jsp?state=pending&type=medical">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu" id="nursing_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="appointments.jsp?state=accepted&type=nursing">Accepted</a></li>
                                     <li><a href="appointments.jsp?state=pending&type=nursing">Pending</a></li>
                                 </ul>
-                            </li>
+                           </li>
                             <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
@@ -177,7 +178,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" summary='somefreakydummytext' id="nullAppoinments">
+                                        <table class="table table-hover table-center mb-0" id="nullAppoinments">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
@@ -199,21 +200,36 @@
             </div>
 
         </div>
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+                                        
+        <div class="modal fade" id="cancel_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-content p-2">
                             <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary" onclick="deleteAppointments()">Save </button>
+                            <p class="mb-4">Are you sure want to cancel this appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="cancelAppointment()">Cancel</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>  
+        </div>
+
+        <div class="modal fade" id="confirm_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete</h4>
+                            <p class="mb-4">Are you sure want to confirm tihs appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="confirmAppointment()">Confirm</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>        
         
         <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>

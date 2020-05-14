@@ -590,115 +590,80 @@ function searchDoctors() {
     document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
 }
 
-function getAppointmentsData(state, userType) {
+function getAppointmentsData(state) {
+    
     getSessionData();
     sessionStorage.setItem("flag", "false");
-    if(userType === null){
-        if(sessionStorage.getItem("type") === "doctor"){
-            userType = "medical";
-        }else{
-            userType = "nursing";
+    var database = firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            childX.forEach(function (childY) {
+                if (childY.child("state").val() === state) {
+                    sessionStorage.setItem("flag", "true");
+                    setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
+                }
+            });
+        });
+        if (sessionStorage.getItem("flag") === "false") {
+            document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
         }
-    }
-    sessionStorage.setItem("userType", userType);
-    if (sessionStorage.getItem("type") === "patient") {
-        firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
-            snapshot.forEach(function (childX) {
-                //alert(childX.key);
-                childX.forEach(function (childY) {
-                    childY.forEach(function (childZ) {
-                        if(childZ.child("patient").val() === sessionStorage.getItem("id") && childZ.child("state").val() === state
-                                && childZ.child("type").val() === userType){
-                            sessionStorage.setItem("flag", "true");
-                            setAppointmentsData(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
-                        }
-                    });
-                });
-            });
-            if (sessionStorage.getItem("flag") === "false") {
-                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
-            }
-        });
+    });
 
-        document.getElementById("appointments_title").innerHTML = "Appointments " + state;
-
-    } else {
-        firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
-            //alert(snapshot.key);
-            snapshot.forEach(function (childX) {
-                //alert(childX.key);
-                childX.forEach(function (childY) {
-                    //alert(childY.key);
-                    if (childY.child("state").val() === state) {
-                        sessionStorage.setItem("flag", "true");
-                        setAppointmentsData(state, childX.key, childY.key, childY.child("patient").val(), childY.child("subtype").val());
-                    }
-                });
-            });
-            if (sessionStorage.getItem("flag") === "false") {
-                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
-            }
-        });
-
-        document.getElementById("appointments_title").innerHTML = "Appointments " + state;
-    }
+    document.getElementById("appointments_title").innerHTML = "Appointments " + state;
 }
 
-function setAppointmentsData(state, date, hour, user, reason) {
-     if (sessionStorage.getItem("type") === "patient") {
-
-        firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
+function setAppointmentsData(state, date, hour, patient, reason) {
+    var database2 = firebase.database().ref('Users/' + patient).once('value').then(function (snapshot2) {
+        if(state === "accepted"){
             var content = "<tr>" + "<td>" + date + "</td>" +
-                    "<td>" + hour + "</td>" +
-                    "<td>" + snapshot2.child("name").val() + "</td>" +
-                    "<td>" + reason + "</td>" +
-                    '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
-                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
-                    "</tr>";
-            if (sessionStorage.getItem("type") === "doctor") {
-                $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-            } else {
-                $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-            }
-
-        });
-    } else {
-        firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-success-light mr-2"> <i class="fe fe-pencil"></i> Edit</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal">    <i class="fe fe-trash"></i> Delete </a></td>' +
+                "</tr>";
+        }else{
             var content = "<tr>" + "<td>" + date + "</td>" +
-                    "<td>" + hour + "</td>" +
-                    "<td>" + snapshot2.child("name").val() + "</td>" +
-                    "<td>" + reason + "</td>" +
-                    '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
-                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + sessionStorage.getItem("id") + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
-                    "</tr>";
-            if (sessionStorage.getItem("type") === "doctor") {
-                $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-            } else {
-                $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
-            }
-
-        });
-    }
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-primary-light mr-2" data-toggle="modal" href="#confirm_modal" onclick=storeAppointment("' + hour + '","' + date + '","' + sessionStorage.getItem("id") + '","' + patient + '")> <i class="fe fe-check"></i> Confirm</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#cancel_modal" onclick=storeAppointment("' + hour + '","' + date + '","' + sessionStorage.getItem("id") + '")>    <i class="fe fe-trash"></i> Cancel </a></td>' +
+                "</tr>";
+            
+        }
+        
+        if(sessionStorage.getItem("type") === "doctor"){
+            $("#" + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }else{
+            $("." + sessionStorage.getItem("type") + "_" + state + "_table").append(content);
+        }
+        
+    });
 }
 
-function deleteAppointments() {
-    //alert("Hola");
+function storeAppointment(hour, date, user, patient){
+    sessionStorage.setItem("appointment_date", date);
+    sessionStorage.setItem("appointment_hour", hour);
+    sessionStorage.setItem("appointment_user", user);
+    sessionStorage.setItem("appointment_patient", patient);
+
+    var content='<a>"'+hour+'"</a>';
+    $("#appointment_data").append(content);
+
+}
+
+function deleteAppointment(){
+
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
-            sessionStorage.getItem("appointment_hour")).set({
-        state: "free",
-        type: sessionStorage.getItem("userType")
+            sessionStorage.getItem("appointment_hour")).remove().then(function () {
+
+    }).catch(function (error) {
+        alert(error);
     });
     location.reload();
 }
 
-function storeDate(date, hour, user) {
-    sessionStorage.setItem("appointment_date", date);
-    sessionStorage.setItem("appointment_hour", hour);
-    sessionStorage.setItem("appointment_user", user);
-}
-
 function confirmAppointment(){
-    alert("Entra en confirmar");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "accepted",
@@ -709,5 +674,10 @@ function confirmAppointment(){
 }
 
 function cancelAppointment(){
-    
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).set({
+        state: "free",
+        type: sessionStorage.getItem("medical")
+    });
+    location.reload();
 }
