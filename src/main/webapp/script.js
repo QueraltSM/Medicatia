@@ -211,7 +211,7 @@ function countHealthPersonnelAppointments(id) {
 }
 
 function countAppoinments(id) {
-    if (sessionStorage.getItem("type") === "doctor" || sessionStorage.getItem("type") === "nurse") {
+    if (sessionStorage.getItem("type") === "doctor" || sessionStorage.getItem("type") === "nurse") {
         countHealthPersonnelAppointments(id);
     } else if (sessionStorage.getItem("type") === "patient") {
         countPatientAppointments(id);
@@ -655,6 +655,62 @@ function getPatientName(id) {
     });
 }
 
+function editAppointments() {
+    getSessionData();
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user")).once('value').then(function (snapshot) {
+        var content = "";
+        snapshot.forEach(function (childX) {
+            //alert(childX.key);
+            childX.forEach(function (childY) {
+                //alert(childY.key);
+                if (childY.child("state").val() === "free" && sessionStorage.getItem("appointment_date_editdate") !== childX.key) {
+                    sessionStorage.setItem("appointment_date_editdate", childX.key);
+                    content += "<option value=" + childX.key + ">" + childX.key + "</option>";
+                }
+            });
+        });
+        $("#appointments_date").append(content);
+    });
+    document.getElementById("edit_appointments_title").innerHTML = "Change appointment " + sessionStorage.getItem("appointment_date")
+            + " " + sessionStorage.getItem("appointment_hour");
+}
+
+function select_date_Edit() {
+    var x = document.getElementById("appointments_date").value;
+    sessionStorage.setItem("appointment_date_edit", x);
+    //document.getElementById("prueba").innerHTML = x;
+    $("#appointments_hour").empty();
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + x).once('value').then(function (snapshot) {
+        var content = "";
+        snapshot.forEach(function (childX) {
+            if (childX.child("state").val() === "free") {
+                content += "<option value=" + childX.key + ">" + childX.key + "</option>";
+            }
+        });
+        $("#appointments_hour").append(content);
+    });
+}
+
+function select_hour_Edit() {
+    var x = document.getElementById("appointments_hour").value;
+    //document.getElementById("prueba").innerHTML = x;
+    sessionStorage.setItem("appointment_hour_edit", x);
+}
+
+function finishEdit() {
+    var x = document.getElementById("edit_subtype").value;
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date_edit") + '/' +
+            sessionStorage.getItem("appointment_hour_edit")).update({
+        patient: sessionStorage.getItem("id"),
+        state: "pending",
+        subtype: x,
+        type: sessionStorage.getItem("type_appointment")
+
+    });
+    sessionStorage.setItem("flag3", "true");
+    deleteAppointments();
+}
+
 function deleteAppointment() {
     var date = sessionStorage.getItem("last_appointment_date").split('/').join("-");
     var appointment = sessionStorage.getItem("last_appointment_time");
@@ -663,6 +719,42 @@ function deleteAppointment() {
         alert(error);
     });
 }
+
+function deleteAppointments() {
+
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).set({
+        state: "free",
+        type: sessionStorage.getItem("type_appointment")
+    });
+
+    if (sessionStorage.getItem("flag3") === "true" && sessionStorage.getItem("type_appointment") === "medical") {
+        sessionStorage.setItem("flag3", "false");
+        window.location.replace("myappointments.jsp?state=" + sessionStorage.getItem("appointment_state") + "&type=medical&table=Doctor");
+    } else if (sessionStorage.getItem("flag3") === "true" && sessionStorage.getItem("type_appointment") === "nursing") {
+        sessionStorage.setItem("flag3", "false");
+        window.location.replace("myappointments.jsp?state=" + sessionStorage.getItem("appointment_state") + "&type=nursing&table=Nurse");
+    } else {
+        location.reload();
+    }
+}
+
+function storeDate(date, hour, user, action) {
+
+    sessionStorage.setItem("appointment_date", date);
+    sessionStorage.setItem("appointment_hour", hour);
+    sessionStorage.setItem("appointment_user", user);
+
+    if (action === "edit") {
+        window.location.replace("edit_patient_appointments.jsp");
+    }
+    if (action === "view") {
+        window.location.replace("history.jsp");
+    }
+
+
+}
+
 
 function freeAppointment() {
     var date = sessionStorage.getItem("last_appointment_date").split('/').join("-");
@@ -721,17 +813,68 @@ function setAppointment(date, time, user, subtype, state) {
     });
 }
 
-function getAppointmentsData(state) {
-    getSessionData();
-    firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
-        snapshot.forEach(function (childX) {
-            childX.forEach(function (snapshotChild) {
-                if (state === snapshotChild.child("state").val()) {
-                    setAppointment(childX.key, snapshotChild.key, snapshotChild.child("patient").val(), snapshotChild.child("subtype").val(), state);
-                }
-            });
-        });
+function setAppointmentsPatients(state, date, hour, user, reason) {
+
+    firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
+        var content = "<tr>" + "<td>" + date + "</td>" +
+                "<td>" + hour + "</td>" +
+                "<td>" + snapshot2.child("name").val() + "</td>" +
+                "<td>" + reason + "</td>" +
+                '<td><a class="btn btn-sm bg-success-light mr-2" href="#modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
+                '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeDate("' + date + '","' + hour + '","' + user + '","delete")><i class="fe fe-trash"></i> Delete </a></td>' +
+                "</tr>";
+
+        $("#appointments_table").append(content);
     });
+
+}
+
+function getAppointmentsData(state, type) {
+    getSessionData();
+    var flag = false;
+
+    if (type === "null") {
+        if (sessionStorage.getItem("type") === "doctor") {
+            type = "medical";
+        } else {
+            type = "nursing";
+        }
+    }
+    sessionStorage.setItem("appointment_state", state);
+    sessionStorage.setItem("type_appointment", type);
+
+    if (sessionStorage.getItem("type") !== "patient") {
+        firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                childX.forEach(function (snapshotChild) {
+                    if (state === snapshotChild.child("state").val()) {
+                        flag = true;
+                        setAppointment(childX.key, snapshotChild.key, snapshotChild.child("patient").val(), snapshotChild.child("subtype").val(), state);
+                    }
+                });
+            });
+            if (flag === false) {
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            }
+        });
+    } else {
+        firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                childX.forEach(function (childY) {
+                    childY.forEach(function (childZ) {
+                        if (childZ.child("patient").val() === sessionStorage.getItem("id") && childZ.child("state").val() === state
+                                && childZ.child("type").val() === type) {
+                            flag = true;
+                            setAppointmentsPatients(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
+                        }
+                    });
+                });
+            });
+            if (flag === false) {
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            }
+        });
+    }
 }
 
 function storeLastSelectedAppointment(date, time, user, name, subtype, state) {
@@ -797,7 +940,7 @@ function resetPrescribeMedicationForm() {
 function savePrescription() {
     var id = sessionStorage.getItem("id_users");
     var d = new Date();
-    var datetime = d.getDate() + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + "." + d.getHours() + ":" + d.getMinutes();
+    var datetime = d.getDate() + "-" + (d.getMonth() + 1) + "-" + d.getFullYear() + "." + d.getHours() + ":" + d.getMinutes();
     var file = document.getElementById("prescription_pdf").files[0];
     var thisRef = firebase.storage().ref().child(id + "/_" + datetime + "_");
     thisRef.put(file).then(function (snapshot) {
@@ -810,16 +953,16 @@ function getPrescriptionsFiles() {
     if (sessionStorage.getItem("type") !== "patient") {
         id = sessionStorage.getItem("id_users");
     }
-     firebase.storage().ref().child(id).listAll().then(function (res) {
+    firebase.storage().ref().child(id).listAll().then(function (res) {
         res.items.forEach(function (itemRef) {
             itemRef.getDownloadURL().then(function (url) {
-                var filename =  url.substring(url.indexOf("_")+1, url.lastIndexOf("_")).split('-').join("/").split('.').join(" ").split('%3A').join(":");
-                $("#prescriptions_data").append('<a href="'+url+'" target="_blank">' + filename + '</a><br>');
+                var filename = url.substring(url.indexOf("_") + 1, url.lastIndexOf("_")).split('-').join("/").split('.').join(" ").split('%3A').join(":");
+                $("#prescriptions_data").append('<a href="' + url + '" target="_blank">' + filename + '</a><br>');
             });
         });
     }).catch(function (error) {
     });
-    
+
 }
 
 function showAllPrescriptions() {
