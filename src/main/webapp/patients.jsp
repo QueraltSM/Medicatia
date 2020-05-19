@@ -49,8 +49,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search_patient" placeholder="Search here">
+                        <button class="btn" type="button" onclick="searchPatient()"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -170,6 +170,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Name</th>
+                                                        <th>DNI</th>
+                                                        <th>Email</th>
                                                         <th>Phone</th>
                                                         <th id="actions">Actions</th>
                                                     </tr>

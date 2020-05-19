@@ -186,20 +186,35 @@
             <!-- /Page Wrapper -->
         </div>
         <!-- Delete Modal -->
+        <div class="modal fade" id="confirm_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Delete</h4>
+                            <p class="mb-4">Are you sure want to confirm tihs appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="confirmAppointment()">Confirm</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>  
+                                        
         <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-content p-2">
                             <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary" onclick="deleteAppointments()">Save</button>
+                            <p class="mb-4">Are you sure want to free tihs appointment?</p>
+                            <button type="button" class="btn btn-primary" onclick="freeAppointment()">Confirm</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </div>     
         <!-- /Delete Modal -->
         <!-- /Main Wrapper -->
         <!-- jQuery -->

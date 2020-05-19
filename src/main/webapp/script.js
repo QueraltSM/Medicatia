@@ -804,10 +804,10 @@ function setAppointment(date, time, user, subtype, state) {
             name = name.replace(" ", ":");
             subtype = subtype.replace(" ", ":");
             content += '<td><a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + user + '","medical_history")> <i class="fe fe-eye"></i> View medical history</a><a class="btn btn-sm bg-success-light mr-2" onclick=storeLastSelectedAppointment("' + date + '","' + time + '","' + user + '","' + name + '","' + subtype + '","' + state + '")> <i class="fe fe-pencil"></i> Edit</a>' +
-                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + user + '")><i class="fe fe-trash"></i> Delete </a></td></tr>';
+                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")><i class="fe fe-trash"></i> Delete </a></td></tr>';
         } else {
-            content += '<td><a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + user + '","edit")> <i class="fe fe-pencil"></i> Accept</a>' +
-                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeUIDSelected("' + user + '")><i class="fe fe-trash"></i>Reject</a></td></tr>';
+            content += '<td><a class="btn btn-sm bg-success-light mr-2" data-toggle="modal" href="#confirm_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")> <i class="fe fe-check"></i> Accept</a>' +
+                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")><i class="fe fe-trash"></i> Reject</a></td></tr>';
         }
         $("#appointments_table").append(content);
     });
@@ -975,4 +975,77 @@ function showAllPrescriptions() {
         document.getElementById("prescriptions_btn").innerHTML = "Hide";
         getPrescriptionsFiles();
     }
+}
+
+function searchPatient() {
+    var search = document.getElementById("search_patient").value;
+    sessionStorage.setItem("flag2", "false");
+    firebase.database().ref('Users/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            if (childX.child("type").val() === "patient" && (childX.child("dni").val().includes(search)) || childX.child("name").val().includes(search)) {
+                sessionStorage.setItem("flag2", "true");
+                var content = "<tr>" + 
+                        "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("dni").val() + "</td>" +
+                        "<td>" + childX.child("email").val() + "</td>" +
+                        "<td>" + childX.child("phone").val() + "</td>" +
+                        "</tr>";
+                
+            }
+            $("#patient_table").append(content);
+        });
+        
+        if (sessionStorage.getItem("flag2") === "false") {
+            document.getElementById("nullSearch").innerHTML = "No search results";
+        }
+    });
+    document.getElementById("patient_table").innerHTML = "";
+}
+
+function storeAppointment(hour, date, user, patient, reason){
+    alert(hour);
+    var type= sessionStorage.getItem("type");
+    if (type === "doctor"){
+        sessionStorage.setItem("userType", "medical");
+    }else{
+        sessionStorage.setItem("userType", "nursing");
+        
+    }
+    sessionStorage.setItem("appointment_date", date);
+    sessionStorage.setItem("appointment_hour", hour);
+    sessionStorage.setItem("appointment_user", user);
+    sessionStorage.setItem("appointment_patient", patient);   
+    sessionStorage.setItem("appointment_reason", reason); 
+}
+
+function deleteAppointment(){  
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).remove().then(function () {
+
+    }).catch(function (error) {
+        alert(error);
+    });
+    location.reload();        
+}
+
+function confirmAppointment(){
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).set({
+        state: "accepted",
+        patient: sessionStorage.getItem("appointment_patient"),
+        subtype: sessionStorage.getItem("appointment_reason"),
+        type: sessionStorage.getItem("userType")
+    });
+    location.reload();  
+}
+
+function freeAppointment(){
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
+            sessionStorage.getItem("appointment_hour")).set({
+        state: "free",
+        type: sessionStorage.getItem("userType")
+    }).catch(function (error) {
+        alert(error);
+    });
+    location.reload();  
 }
