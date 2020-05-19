@@ -191,7 +191,7 @@
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-content p-2">
-                            <h4 class="modal-title">Confirm/h4>
+                            <h4 class="modal-title">Confirm</h4>
                             <p class="mb-4">Are you sure want to confirm this appointment?</p>
                             <button type="button" class="btn btn-primary" onclick="confirmAppointment()">Confirm</button>
                             <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
