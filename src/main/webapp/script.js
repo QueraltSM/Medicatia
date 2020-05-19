@@ -756,7 +756,7 @@ function storeDate(date, hour, user, action) {
 }
 
 
-function freeAppointment() {
+function freeAppointment_1() {
     var date = sessionStorage.getItem("last_appointment_date").split('/').join("-");
     var appointment = sessionStorage.getItem("last_appointment_time");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("id") + "/" + date + "/" + appointment).set({
@@ -771,7 +771,7 @@ function freeAppointment() {
 }
 
 function updateAppointment() {
-    freeAppointment();
+    freeAppointment_1();
     var selected_appointment = document.getElementById("all_appointments_selection").value;
     var selected_date = $("#datepicker").val().split('/').join("-");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("id") + "/" + selected_date + "/" + selected_appointment).set({
@@ -797,17 +797,21 @@ function resetEditAppointmentForm() {
 
 
 function setAppointment(date, time, user, subtype, state) {
+    //alert(date + " " + time + " " + user + " " + subtype + " " + state);
     firebase.database().ref('Users/' + user).once('value').then(function (snapshot) {
+        //alert(snapshot.child("name").val());
         var content = '<tr><td>' + date + '</td><td>' + time + '</td><td>' + snapshot.child("name").val() + '</td><td>' + subtype + '</td>';
         var name = snapshot.child("name").val();
+        name = name.replace(" ", ":");
+        subtype = subtype.replace(" ", ":");
         if (state === "accepted") {
-            name = name.replace(" ", ":");
-            subtype = subtype.replace(" ", ":");
+            //alert(snapshot.key);
             content += '<td><a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + user + '","medical_history")> <i class="fe fe-eye"></i> View medical history</a><a class="btn btn-sm bg-success-light mr-2" onclick=storeLastSelectedAppointment("' + date + '","' + time + '","' + user + '","' + name + '","' + subtype + '","' + state + '")> <i class="fe fe-pencil"></i> Edit</a>' +
                     '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")><i class="fe fe-trash"></i> Delete </a></td></tr>';
         } else {
             content += '<td><a class="btn btn-sm bg-success-light mr-2" data-toggle="modal" href="#confirm_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")> <i class="fe fe-check"></i> Accept</a>' +
-                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")><i class="fe fe-trash"></i> Reject</a></td></tr>';
+                    '<a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#reject_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")><i class="fe fe-trash"></i> Reject</a></td></tr>';
+            //content += '<td><a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=storeAppointment("' + time + '","' + date + '","' + sessionStorage.getItem("id") + '","' + user + '","' + subtype + '")><i class="fe fe-trash"></i> Delete </a></td></tr>';
         }
         $("#appointments_table").append(content);
     });
@@ -848,6 +852,7 @@ function getAppointmentsData(state, type) {
             snapshot.forEach(function (childX) {
                 childX.forEach(function (snapshotChild) {
                     if (state === snapshotChild.child("state").val()) {
+                        //alert("Entró");
                         flag = true;
                         setAppointment(childX.key, snapshotChild.key, snapshotChild.child("patient").val(), snapshotChild.child("subtype").val(), state);
                     }
@@ -1003,7 +1008,7 @@ function searchPatient() {
 }
 
 function storeAppointment(hour, date, user, patient, reason){
-    alert(hour);
+    alert("HA ENTRADO");
     var type= sessionStorage.getItem("type");
     if (type === "doctor"){
         sessionStorage.setItem("userType", "medical");
@@ -1018,7 +1023,7 @@ function storeAppointment(hour, date, user, patient, reason){
     sessionStorage.setItem("appointment_reason", reason); 
 }
 
-function deleteAppointment(){  
+/*function deleteAppointment(){  
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).remove().then(function () {
 
@@ -1026,9 +1031,10 @@ function deleteAppointment(){
         alert(error);
     });
     location.reload();        
-}
+}*/
 
 function confirmAppointment(){
+    alert("Entra en confirmAppointment()");
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "accepted",
@@ -1043,9 +1049,53 @@ function freeAppointment(){
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "free",
-        type: sessionStorage.getItem("userType")
+        type: sessionStorage.getItem("type_appointment")
     }).catch(function (error) {
         alert(error);
     });
     location.reload();  
 }
+
+function searchNurses() {
+    var search = document.getElementById("search_nurse").value; //Búsqueda
+    sessionStorage.setItem("flag", "false"); //Guarda la sesión
+    firebase.database().ref('Users/').once('value').then(function (snapshot) { //Accede a los usuarios de la BBDD
+        snapshot.forEach(function (childX) { //Va bajando de forma anidada
+            if (childX.child("type").val() === "nurse" && (childX.child("speciality").val() === search)) {
+                sessionStorage.setItem("flag", "true");
+                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" + //Tabla de dni, nombre, email, phone
+                        "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("speciality").val() + "</td>" +
+                         "<td>" + childX.child("phone").val() + "</td>" +
+                        "</tr>";
+            }
+            $("#nurse_table").append(content); //tabla de enfermeros
+        });
+        if (sessionStorage.getItem("flag") === "false") { 
+            document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
+        }
+    });
+    document.getElementById("nurse_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
+}
+
+function searchDoctors() {
+    var search = document.getElementById("search_doctor").value; //Búsqueda
+    sessionStorage.setItem("flag", "false"); //Guarda la sesión
+    firebase.database().ref('Users/').once('value').then(function (snapshot) { //Accede a los usuarios de la BBDD
+        snapshot.forEach(function (childX) { //Va bajando de forma anidada
+            if (childX.child("type").val() === "doctor" && (childX.child("speciality").val() === search)) {
+                sessionStorage.setItem("flag", "true");
+                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" + //Tabla de dni, nombre, email, phone
+                       "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("speciality").val() + "</td>" +
+                         "<td>" + childX.child("phone").val() + "</td>" +
+                        "</tr>";
+            }
+            $("#doctor_table").append(content); //tabla de enfermeros
+        });
+        if (sessionStorage.getItem("flag") === "false" || sessionStorage.getItem("flag4") === "") { 
+            document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
+        }
+    });
+    document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
+} 
