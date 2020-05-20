@@ -841,6 +841,7 @@ function getAppointmentsData(state, type) {
             type = "nursing";
         }
     }
+
     sessionStorage.setItem("appointment_state", state);
     sessionStorage.setItem("type_appointment", type);
 
@@ -1004,6 +1005,7 @@ function searchPatient() {
 }
 
 function storeAppointment(hour, date, user, patient, reason){
+
     var type= sessionStorage.getItem("type");
     if (type === "doctor"){
         sessionStorage.setItem("userType", "medical");
@@ -1019,6 +1021,7 @@ function storeAppointment(hour, date, user, patient, reason){
 
 
 function confirmAppointment(){
+    alert(sessionStorage.getItem("appointment_patient") + " " + sessionStorage.getItem("appointment_reason") + " " + sessionStorage.getItem("userType"));
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "accepted",
@@ -1047,7 +1050,7 @@ function searchNurses() {
         snapshot.forEach(function (childX) { //Va bajando de forma anidada
             if (childX.child("type").val() === "nurse" && (childX.child("speciality").val() === search)) {
                 sessionStorage.setItem("flag", "true");
-                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" + //Tabla de dni, nombre, email, phone
+                var content = "<tr>" +//Tabla de dni, nombre, email, phone
                         "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("speciality").val() + "</td>" +
                          "<td>" + childX.child("phone").val() + "</td>" +
@@ -1067,9 +1070,9 @@ function searchDoctors() {
     sessionStorage.setItem("flag", "false"); //Guarda la sesión
     firebase.database().ref('Users/').once('value').then(function (snapshot) { //Accede a los usuarios de la BBDD
         snapshot.forEach(function (childX) { //Va bajando de forma anidada
-            if (childX.child("type").val() === "doctor" && (childX.child("speciality").val() === search)) {
+            if (childX.child("type").val() === "doctor" && (childX.child("speciality").val() === search || childX.child("name").val() === search)) {
                 sessionStorage.setItem("flag", "true");
-                var content = "<tr>" + "<td>" + childX.child("dni").val() + "</td>" + //Tabla de dni, nombre, email, phone
+                var content = "<tr>" + //Tabla de dni, nombre, email, phone
                        "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("speciality").val() + "</td>" +
                          "<td>" + childX.child("phone").val() + "</td>" +
@@ -1077,9 +1080,9 @@ function searchDoctors() {
             }
             $("#doctor_table").append(content); //tabla de enfermeros
         });
-        if (sessionStorage.getItem("flag") === "false" || sessionStorage.getItem("flag4") === "") { 
+        if (sessionStorage.getItem("flag") === "false") { 
             document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
         }
     });
     document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
-} 
+}
