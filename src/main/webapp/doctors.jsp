@@ -49,6 +49,8 @@
 
                 <div class="top-nav-search">
                     <form>
+                        <!--<input type="text" class="form-control" placeholder="Search here">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
                         <input type="text" class="form-control" id="search_doctor" placeholder="Search here">
                         <button class="btn" type="button" onclick="searchDoctors()"><i class="fa fa-search"></i></button>
                     </form>
@@ -89,7 +91,7 @@
 
             </div>
             <!-- /Header -->
-            <!-- Sidebar -->
+                      <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -103,28 +105,31 @@
                             <li id="adduser_menu_section">
                                 <a href="adduser.jsp"><i class="fe fe-user-plus"></i> <span>User</span></a>
                             </li>
-                            <li class="has-submenu" id="appointments_menu_section">
+                            <li id="history_menu_section">
+                                <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
+                            </li>
+                           <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu"  id="medical_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu" id="nursing_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?t=accepted">Accepted</a></li>
-                                    <li><a href="appointments.jsp?t=pending">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li id="administrators_menu_section">
+                           </li>
+                           <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -136,13 +141,12 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-
+                            
                         </ul>
                     </div>
                 </div>
             </div>
             <!-- /Sidebar -->
-
             <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
@@ -162,12 +166,12 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
+                                        <!--<table class="table table-hover table-center mb-0" summary='somefreakydummytext'>-->
                                         <table class="table table-hover table-center mb-0" id="nullSearch">
                                             <thead>
                                                 <tr>
-                                                    <th>DNI/NIE/NIF</th>
-                                                    <th>Name</th>
-                                                    <th>Category</th>
+                                                    <th>Doctor</th>
+                                                    <th>Speciality</th>
                                                     <th>Phone</th>
                                                     <th id="actions">Actions</th>
                                                 </tr>
