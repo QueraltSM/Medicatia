@@ -1,10 +1,3 @@
-<%-- 
-    Document   : history
-    Created on : 13 may. 2020, 12:26:49
-    Author     : charl
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -81,22 +74,22 @@
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
                             </li>
                             <li id="administrators_menu_section">
@@ -229,7 +222,10 @@
                                     </div>
                                     <div class="form-group row">
                                         <a href="prescribeMedication.jsp" class="btn btn-primary" id="prescribe">Prescribe medication</a>
-                                   </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <a href="editHistory.jsp" class="btn btn-primary" id="editHistory">Edit medical history</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
