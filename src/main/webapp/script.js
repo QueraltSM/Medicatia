@@ -681,3 +681,5 @@ function cancelAppointment(){
     });
     location.reload();
 }
+
+//Starting HU 25
