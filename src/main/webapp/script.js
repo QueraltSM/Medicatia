@@ -284,6 +284,8 @@ function storeUIDSelected(uid, action) {
         window.location = "requestAppointment.jsp";
     else if (action === "medical_history")
         window.location = "history.jsp";
+    else if (action === "send_email")
+        window.location = "sendEmail.jsp";
 }
 
 function uploadPreviewPhoto() {
@@ -379,7 +381,7 @@ function updateM() {
         email: document.getElementById("email").value
     });
 
-    window.location = "home.jsp";
+    window.location = "history.jsp";
 }
 
 function updateUsers() {
@@ -464,6 +466,12 @@ function getUsersData(type) {
                         content += "<td>" + childX.child("speciality").val() + "</td>";
                     }
                     content += "<td>" + childX.child("phone").val() + "</td>";
+
+                    if (sessionStorage.getItem("type") === "doctor") {
+                        document.getElementById("actions").style.display = "flex";
+                        content += '<td><a class="btn btn-sm bg-info-light" href="#" onclick=storeUIDSelected("' + childX.key + '","send_email")> <i class="fe fe-mail"></i> Send email </a></td>' +
+                                "</tr>";
+                    }
                     if (sessionStorage.getItem("type") === "administrator") {
                         document.getElementById("actions").style.display = "flex";
                         content += '<a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + childX.key + '","medical_history")> <i class="fe fe-eye"></i> View medical history</a>' + '<a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + childX.key + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
@@ -1191,4 +1199,52 @@ function searchDoctors() {
         }
     });
     document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
+}
+
+function setEmailData() {
+    getSessionData();
+    firebase.database().ref('Users/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            if (childX.key === sessionStorage.getItem("id_users")) {
+                document.getElementById("send_email_name").innerHTML = "Send email to " + childX.child("name").val();
+                sessionStorage.setItem("email_user", childX.child("email").val());
+            }
+        });
+    });
+
+}
+
+function sendEmail() {
+
+    //alert(document.getElementById("subject").value + " " + document.getElementById("message").value);
+    var flag = false;
+    var flag2 = false;
+
+    if (document.getElementById("subject").value === "") {
+        document.getElementById("subject").style.borderColor = "red";
+        document.getElementById("errorSubject").innerHTML = "You have to put a Subject";
+    } else {
+        flag = true;
+        document.getElementById("subject").style.borderColor = "";
+        document.getElementById("errorSubject").innerHTML = "";
+    }
+
+    if (document.getElementById("message").value === '') {
+        document.getElementById("message").style.borderColor = "red";
+        document.getElementById("errorMessage").innerHTML = "You have to put a Message";
+    } else {
+        flag2 = true;
+        document.getElementById("message").style.borderColor = "";
+        document.getElementById("errorMessage").innerHTML = "";
+    }
+
+    if (flag === true && flag2 === true) {
+        var yourMessage = document.getElementById("message").value;
+        var subject = document.getElementById("subject").value;
+        document.location.href = "mailto:" + sessionStorage.getItem("email_user") + "?subject="
+                + encodeURIComponent(subject)
+                + "&body=" + encodeURIComponent(yourMessage);
+    }
+    //alert("Mensaje enviado con exito");
+    //window.location = "patients.jsp";
 }

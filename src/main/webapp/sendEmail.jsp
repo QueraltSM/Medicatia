@@ -1,6 +1,6 @@
 <%-- 
-    Document   : editappointments
-    Created on : 11 may. 2020, 19:07:49
+    Document   : sendEmail
+    Created on : 21 may. 2020, 12:50:19
     Author     : charl
 --%>
 
@@ -24,7 +24,7 @@
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
-    <body onload="editAppointments()">
+    <body onload="setEmailData()">
         <div class="main-wrapper">
             <div class="header">
                 <div class="header-left">
@@ -85,22 +85,22 @@
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
                             </li>
                             <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
-                                    <li><a href="appointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
-                                    <li><a href="appointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
+                                    <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
+                                    <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
                             </li>
                             <li id="administrators_menu_section">
@@ -126,38 +126,33 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="page-title" id="edit_appointments_title"></h3>
+                                <h3 class="page-title" id="send_email_name"></h3>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-xl-12 d-flex">
                             <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h4 class="card-title">Content of email</h4>
+                                </div>
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Available dates:</label>
+                                        <label class="col-lg-3 col-form-label">Subject:</label>
                                         <div class="col-lg-9">
-                                            <select class="select" id="appointments_date" onchange="select_date_Edit()">
-
-                                            </select>
+                                            <input type="text" class="form-control" id="subject">
+                                            <div id="errorSubject" class="error_label"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Available hours:</label>
+                                        <label class="col-lg-3 col-form-label">Message:</label>
                                         <div class="col-lg-9">
-                                            <select class="select" id="appointments_hour" onchange="select_hour_Edit()">
-
-                                            </select>
+                                            <textarea class="form-control" rows="6" id="message"></textarea>
+                                            <div id="errorMessage" class="error_label"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Reason:</label>
-                                        <div class="col-lg-9">
-                                            <input class="form-control" type="text" id="edit_subtype">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <input type="button" class="btn btn-primary" onclick="finishEdit()" value="Request">
+                                        <input type="button" class="btn btn-primary" value="Send" onclick="sendEmail()">
                                     </div>
                                 </div>
                             </div>
