@@ -1,9 +1,3 @@
-<%-- 
-    Document   : indexx
-    Created on : 15-abr-2020, 20:43:08
-    Author     : QSM
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
