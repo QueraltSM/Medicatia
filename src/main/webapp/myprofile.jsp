@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
 
@@ -146,6 +145,7 @@
                     </div>
                 </div>
             </div>
+            <!-- /Sidebar -->
             <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
@@ -154,7 +154,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="page-title">Edit user</h3>
+                                <h3 class="page-title">Edit profile</h3>
                             </div>
                         </div>
                     </div>
@@ -275,8 +275,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn-block">Save Changes</button>
-                                    </form>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                                        </div>
+                                       </form>
                                 </div>
                             </div>
                         </div>

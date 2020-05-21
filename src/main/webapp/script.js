@@ -253,7 +253,7 @@ function resetEditUserForm() {
     getSessionData();
     document.getElementById("specialties_doctor").style.display = "none";
     document.getElementById("specialties_nurse").style.display = "none";
-    var id = sessionStorage.getItem("id_users");
+    var id = sessionStorage.getItem("id");
     firebase.database().ref('Users/' + id).once('value').then(function (snapshot) {
         sessionStorage.setItem("type_users", snapshot.child("type").val());
         document.getElementById("dni").value = snapshot.child("dni").val();
@@ -301,7 +301,7 @@ function checkUpdate(dni, uid) {
     var val = "";
     firebase.database().ref("Users/").once('value', function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
-            if (childSnapshot.key !== uid) {
+            if (childSnapshot.key !== sessionStorage.getItem("id")) {
                 if (childSnapshot.child("dni").val() === dni) {
                     document.getElementById("dni").style.borderColor = "red";
                     document.getElementById("errorDNI").innerHTML = "There is already a registered user with that DNI";
@@ -311,6 +311,8 @@ function checkUpdate(dni, uid) {
         });
         if (val !== "false")
             update();
+            saveImage(sessionStorage.getItem("id"), "edit");
+            sessionStorage.setItem("name", document.getElementById("username").value);
     });
 }
 
@@ -324,7 +326,7 @@ function update() {
     } else if (sessionStorage.getItem("type_users") === "nurse") {
         category = document.getElementById("specialties_nurse_selection").value;
     }
-    firebase.database().ref('Users/' + sessionStorage.getItem("id_users")).update({
+    firebase.database().ref('Users/' + sessionStorage.getItem("id")).update({
         dni: dni,
         name: document.getElementById("username").value,
         birth: birth,
