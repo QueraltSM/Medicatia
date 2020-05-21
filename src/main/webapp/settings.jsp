@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
 
@@ -17,14 +16,18 @@
         <!-- Feathericon CSS -->
         <link rel="stylesheet" href="assets/css/feathericon.min.css">
 
-        <!-- Datatables CSS -->
-        <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+        <!-- Select2 CSS -->
+        <link rel="stylesheet" href="assets/css/select2.min.css">
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
-
+        
+        <!--[if lt IE 9]>
+                <script src="assets/js/html5shiv.min.js"></script>
+                <script src="assets/js/respond.min.js"></script>
+        <![endif]-->
     </head>
-    <body onload='getUsersData("doctor")'>
+    <body onload="resetAlertOptions()">
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -47,14 +50,6 @@
                     <i class="fe fe-text-align-left"></i>
                 </a>
 
-                <div class="top-nav-search">
-                    <form>
-                        <!--<input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
-                        <input type="text" class="form-control" id="search_doctor" placeholder="Search here">
-                        <button class="btn" type="button" onclick="searchDoctors()"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
 
                 <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
@@ -64,6 +59,8 @@
 
                 <!-- Header Right Menu -->
                 <ul class="nav user-menu">
+
+
                     <!-- User Menu -->
                     <li class="nav-item dropdown has-arrow">
                         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -91,7 +88,7 @@
 
             </div>
             <!-- /Header -->
-                      <!-- Sidebar -->
+            <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -141,92 +138,72 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
-                             <li>
+                            <li>
                                 <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
                             </li>
-                            
                         </ul>
                     </div>
                 </div>
             </div>
-            <!-- /Sidebar -->
             <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
-
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <h3 class="page-title">List of Doctors</h3>
+                            <div class="col">
+                                <h3 class="page-title">Request an appointment</h3>
                             </div>
                         </div>
                     </div>
                     <!-- /Page Header -->
 
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card">
+                        <div class="col-xl-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h4 class="card-title">Appointment data</h4>
+                                </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <!--<table class="table table-hover table-center mb-0" summary='somefreakydummytext'>-->
-                                        <table class="table table-hover table-center mb-0" id="nullSearch">
-                                            <thead>
-                                                <tr>
-                                                    <th>Doctor</th>
-                                                    <th>Speciality</th>
-                                                    <th>Phone</th>
-                                                    <th id="actions">Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="doctor_table">
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <input type="checkbox" id="alert_notifications" onclick="toggleNotifications()" data-toggle="toggle" data-size="mini"> Alert notifications
+                    
+                                    <form onsubmit="changeNotificationTime(); 
+                                        return false">
+                                        <div class="form-group row" id="Rol">
+                                            <label class="col-lg-3 col-form-label">Reminder time: </label>
+                                            <div class="col-lg-9">
+                                                <select class="form-control" id="alert_time">
+                                                    <option value="15 minutes">15 minutes</option>
+                                                    <option value="30 minutes">30 minutes</option>
+                                                    <option value="45 minutes">45 minutes</option>
+                                                    <option value="1 hour">1 hour</option>
+                                                    <option value="2 hours">2 hours</option>
+                                                    <option value="3 hours">3 hours</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Submit</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                </div>
-            </div>
-            <!-- /Page Wrapper -->
-        </div>
-
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary" onclick="deleteUser()">Save</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
-        <!-- /Delete Modal -->
         <!-- /Main Wrapper -->
-
+        <!-- /Main Wrapper -->
         <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
-
         <!-- Bootstrap Core JS -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
-
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-
-        <!-- Datatables JS -->
-        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/datatables/datatables.min.js"></script>
-
+        <!-- Select2 JS -->
+        <script src="assets/js/select2.min.js"></script>
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>

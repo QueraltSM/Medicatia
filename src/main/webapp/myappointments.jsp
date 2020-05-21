@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
 
@@ -17,14 +16,18 @@
         <!-- Feathericon CSS -->
         <link rel="stylesheet" href="assets/css/feathericon.min.css">
 
-        <!-- Datatables CSS -->
-        <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
+        <!-- Select2 CSS -->
+        <link rel="stylesheet" href="assets/css/select2.min.css">
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
+        <!--[if lt IE 9]>
+                <script src="assets/js/html5shiv.min.js"></script>
+                <script src="assets/js/respond.min.js"></script>
+        <![endif]-->
     </head>
-    <body onload='getAppointmentsData("<%=request.getParameter("state")%>","<%=request.getParameter("type")%>")'>
+    <body onload="resetEditUserForm()">
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -47,12 +50,6 @@
                     <i class="fe fe-text-align-left"></i>
                 </a>
 
-                <div class="top-nav-search">
-                    <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
 
                 <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
@@ -62,6 +59,8 @@
 
                 <!-- Header Right Menu -->
                 <ul class="nav user-menu">
+
+
                     <!-- User Menu -->
                     <li class="nav-item dropdown has-arrow">
                         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -77,7 +76,7 @@
                                     <p class="text-muted mb-0" id="type"></p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" >My Profile</a>
+                            <a class="dropdown-item" href="myprofile.jsp">My Profile</a>
                             <a class="dropdown-item">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
@@ -89,7 +88,7 @@
 
             </div>
             <!-- /Header -->
-                       <!-- Sidebar -->
+            <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -139,7 +138,9 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
+                            <li>
+                                <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -148,103 +149,165 @@
             <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
+
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <h3 class="page-title">My <%=request.getParameter("state")%> appointments</h3>
+                            <div class="col">
+                                <h3 class="page-title">Edit profile</h3>
                             </div>
                         </div>
                     </div>
                     <!-- /Page Header -->
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" id="nullAppoinments">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Time</th>
-                                                    <th><%=request.getParameter("table")%></th>
-                                                    <th>Type</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="appointments_table">
 
-                                            </tbody>
-                                        </table>
-                                    </div>
+                    <div class="row">
+                        <div class="col-xl-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h4 class="card-title">User data</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form onsubmit="updateUsers();
+                                            return false">
+                                        <div class="row form-row">
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>DNI/NIE/NIF</label>
+                                                    <input type="text" class="form-control" id="dni">
+                                                    <div id="errorDNI" class="error_label"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Name</label>
+                                                    <input type="text" class="form-control" id="username">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Date of birth</label>
+                                                    <input type="text" class="form-control" id="birth">
+                                                    <div id="errorDate" class="error_label"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Address</label>
+                                                    <input type="text"  class="form-control" id="address">
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-sm-6">
+                                                <div class="form-group">
+                                                    <label>Phone</label>
+                                                    <input type="text"  class="form-control" id="phone">
+                                                    <div id="errorPhone" class="error_label"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-12 col-sm-6" id="specialties_doctor">
+                                                <div class="form-group">
+                                                    <label>Category</label>
+                                                    <select class="form-control" id="specialties_doctor_selection">
+                                                        <option value="Allergy and Inmunology">Allergy and Inmunology</option>
+                                                        <option value="Anesthesiology">Anesthesiology</option>
+                                                        <option value="Dermatology">Dermatology</option>
+                                                        <option value="Diagnostic Radiology">Diagnostic Radiology</option>
+                                                        <option value="Emergency Medicine">Emergency Medicine</option>
+                                                        <option value="Family Medicine">Family Medicine</option>
+                                                        <option value="Internal Medicine">Internal Medicine</option>
+                                                        <option value="Medical Genetics">Medical Genetics</option>
+                                                        <option value="Neurology">Neurology</option>
+                                                        <option value="Nuclear Medicine">Nuclear Medicine</option>
+                                                        <option value="Obstretics and Gynecology">Obstretics and Gynecology</option>
+                                                        <option value="Opthalmology">Opthalmology</option>
+                                                        <option value="Pathology">Pathology</option>
+                                                        <option value="Pediatrics">Pediatrics</option>
+                                                        <option value="Physical Medicine and Rehabilitation">Physical Medicine and Rehabilitation</option>
+                                                        <option value="Preventive Medicine">Preventive Medicine</option>
+                                                        <option value="Psychiatry">Psychiatry</option>
+                                                        <option value="Radiation Oncology">Radiation Oncology</option>
+                                                        <option value="Surgery">Surgery</option>
+                                                        <option value="Urology">Urology</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-6" id="specialties_nurse">
+                                                <div class="form-group">
+                                                    <label>Specialties</label>
+                                                    <select class="form-control" id="specialties_nurse_selection">
+                                                        <option value="Neonatal Nurse">Neonatal Nurse</option>
+                                                        <option value="Nurse Midwife">Nurse Midwife</option>
+                                                        <option value="Clinical Nurse">Clinical Nurse</option>
+                                                        <option value="Critical Care Nurse">Critical Care Nurse</option>
+                                                        <option value="Dialysis Nurse">Dialysis Nurse</option>
+                                                        <option value="Nurse Practitioner">Nurse Practitioner</option>
+                                                        <option value="Health Policy Nurse">Health Policy Nurse</option>
+                                                        <option value="Informatics Nurse">Informatics Nurse</option>
+                                                        <option value="Nurse Anesthetist">Nurse Anesthetist</option>
+                                                        <option value="Psychiatric Nurse">Psychiatric Nurse</option>
+                                                        <option value="Trauma Nurse">Trauma Nurse</option>
+                                                        <option value="Pediatric Nurse">Pediatric Nurse</option>
+                                                        <option value="Geriatric Nurse">Geriatric Nurse</option>
+                                                        <option value="Oncology Nurse">Oncology Nurse</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-24 col-sm-10">
+                                                <div class="form-group">
+                                                    <label>Additional information</label>
+                                                    <textarea class="form-control" rows="3" id="information"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="col-24 col-sm-10">
+                                                <div class="form-group">
+                                                    <label>Actual profile photo</label><br>
+                                                    <img id="profile_photo" class="img-thumbnail" width="200" height="200">
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 col-sm-10"> 
+                                                <div class="form-group">
+                                                    <label>Image</label>
+                                                    <input type="file"  class="form-control"  onchange="uploadPreviewPhoto()" id="new_profile_photo" accept="image/*">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                                        </div>
+                                       </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /Page Wrapper -->
         </div>
-        <!-- Delete Modal -->
-        <div class="modal fade" id="confirm_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Confirm</h4>
-                            <p class="mb-4">Are you sure want to confirm this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="confirmAppointment()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>  
-                                        
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="freeAppointment()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>     
-        
-        
-        <div class="modal fade" id="reject_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Reject</h4>
-                            <p class="mb-4">Are you sure want to reject this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="freeAppointment()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>     
-        
-        
-        <!-- /Delete Modal -->
+
+
+
         <!-- /Main Wrapper -->
+
+
+
+
+        <!-- /Main Wrapper -->
+
         <!-- jQuery -->
+
+
         <script src="assets/js/jquery-3.2.1.min.js"></script>
+
         <!-- Bootstrap Core JS -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-        <!-- Datatables JS -->
-        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/datatables/datatables.min.js"></script>
+        <!-- Select2 JS -->
+        <script src="assets/js/select2.min.js"></script>
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
