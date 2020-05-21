@@ -55,7 +55,7 @@
                                     <p class="text-muted mb-0" id="type"></p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" >My Profile</a>
+                            <a class="dropdown-item" href="myprofile.jsp">My Profile</a>
                             <a class="dropdown-item">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
@@ -115,6 +115,11 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
+                            
+                             <li>
+                                <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
+                            </li>
+                            
                         </ul>
                     </div>
                 </div>

@@ -66,14 +66,14 @@
                         <div class="dropdown-menu">
                             <div class="user-header">
                                 <div class="avatar avatar-sm">
-                                    <img id="imagenU2" lass="avatar-img rounded-circle">
+                                    <img id="imagenU2" class="avatar-img rounded-circle">
                                 </div>
                                 <div class="user-text">
                                     <h6 id="name"></h6>
                                     <p class="text-muted mb-0" id="type"></p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" >My Profile</a>
+                            <a class="dropdown-item" href="myprofile.jsp">My Profile</a>
                             <a class="dropdown-item">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
@@ -134,6 +134,10 @@
                             </li>
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
+                            </li>
+                            
+                            <li>
+                                <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
                             </li>
                             
                         </ul>
