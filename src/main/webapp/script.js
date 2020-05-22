@@ -251,9 +251,9 @@ function setProfilePhoto(id) {
 
 function resetEditUserForm() {
     getSessionData();
-    //document.getElementById("specialties_doctor").style.display = "none";
-    //document.getElementById("specialties_nurse").style.display = "none";
-    var id = sessionStorage.getItem("id");
+    document.getElementById("specialties_doctor").style.display = "none";
+    document.getElementById("specialties_nurse").style.display = "none";
+    var id = sessionStorage.getItem("id_users");
     firebase.database().ref('Users/' + id).once('value').then(function (snapshot) {
         sessionStorage.setItem("type_users", snapshot.child("type").val());
         document.getElementById("dni").value = snapshot.child("dni").val();
@@ -297,23 +297,37 @@ function uploadPreviewPhoto() {
 }
 
 
-function checkUpdate(dni, uid) {
+function checkUpdate(dni, uid, action) {
     var val = "";
-    firebase.database().ref("Users/").once('value', function (snapshot) {
-        snapshot.forEach(function (childSnapshot) {
-            if (childSnapshot.key !== sessionStorage.getItem("id")) {
-                if (childSnapshot.child("dni").val() === dni) {
-                    document.getElementById("dni").style.borderColor = "red";
-                    document.getElementById("errorDNI").innerHTML = "There is already a registered user with that DNI";
-                    val = "false";
+    if (action === "user") {
+        firebase.database().ref("Users/").once('value', function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                if (childSnapshot.key !== uid) {
+                    if (childSnapshot.child("dni").val() === dni) {
+                        document.getElementById("dni").style.borderColor = "red";
+                        document.getElementById("errorDNI").innerHTML = "There is already a registered user with that DNI";
+                        val = "false";
+                    }
                 }
-            }
+            });
+            if (val !== "false")
+                update();
         });
-        if (val !== "false")
-            update();
-            saveImage(sessionStorage.getItem("id"), "edit");
-            sessionStorage.setItem("name", document.getElementById("username").value);
-    });
+    } else {
+        firebase.database().ref("MedicalHistory/").once('value', function (snapshot) {
+            snapshot.forEach(function (childSnapshot) {
+                if (childSnapshot.key !== uid) {
+                    if (childSnapshot.child("dni").val() === dni) {
+                        document.getElementById("dni").style.borderColor = "red";
+                        document.getElementById("errorDNI").innerHTML = "There is already a registered user with that DNI";
+                        val = "false";
+                    }
+                }
+            });
+            if (val !== "false")
+                updateM();
+        });
+    }
 }
 
 function update() {
@@ -326,7 +340,7 @@ function update() {
     } else if (sessionStorage.getItem("type_users") === "nurse") {
         category = document.getElementById("specialties_nurse_selection").value;
     }
-    firebase.database().ref('Users/' + sessionStorage.getItem("id")).update({
+    firebase.database().ref('Users/' + sessionStorage.getItem("id_users")).update({
         dni: dni,
         name: document.getElementById("username").value,
         birth: birth,
@@ -336,6 +350,36 @@ function update() {
         category: category
     });
     saveImage(sessionStorage.getItem("id_users"), "edit");
+}
+
+function updateM() {
+
+    firebase.database().ref('MedicalHistory/' + sessionStorage.getItem("id_users")).update({
+        allergies: document.getElementById("allergies").value,
+        birth: document.getElementById("birth").value,
+        diseases: document.getElementById("diseases").value,
+        dni: document.getElementById("dni").value,
+        email: document.getElementById("email").value,
+        height: document.getElementById("height").value,
+        marital_status: document.getElementById("marital_status").value,
+        name: document.getElementById("p_name").value,
+        phone: document.getElementById("phone").value,
+        place_of_birth: document.getElementById("p_birth").value,
+        place_of_residence: document.getElementById("p_residence").value,
+        race: document.getElementById("race").value,
+        sex: document.getElementById("sex").value,
+        weight: document.getElementById("weight").value
+    });
+
+    firebase.database().ref('Users/' + sessionStorage.getItem("id_users")).update({
+        dni: document.getElementById("dni").value,
+        name: document.getElementById("p_name").value,
+        birth: document.getElementById("birth").value,
+        phone: document.getElementById("phone").value,
+        email: document.getElementById("email").value
+    });
+
+    window.location = "home.jsp";
 }
 
 function updateUsers() {
@@ -354,7 +398,25 @@ function updateUsers() {
     if (sessionStorage.getItem("validation_dni_update") === "true" &&
             sessionStorage.getItem("validation_birth_update") === "true"
             && sessionStorage.getItem("validation_phone_update") === "true") {
-        checkUpdate(dni, sessionStorage.getItem("id_users"));
+        checkUpdate(dni, sessionStorage.getItem("id_users"), "user");
+    }
+}
+
+function updateMedicalHistory() {
+    var dni = document.getElementById("dni").value;
+    var phone = document.getElementById("phone").value;
+    var birth = document.getElementById("birth").value;
+
+
+    validateDNI(dni, sessionStorage.getItem("id_users"));
+    validateDate(birth);
+    validatePhone(phone);
+
+
+    if (sessionStorage.getItem("validation_dni_update") === "true" &&
+            sessionStorage.getItem("validation_birth_update") === "true"
+            && sessionStorage.getItem("validation_phone_update") === "true") {
+        checkUpdate(dni, sessionStorage.getItem("id_users"), "medical");
     }
 }
 
@@ -394,7 +456,7 @@ function getUsersData(type) {
                         content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","medical_history")>' + childX.child("name").val() + "</a></td>";
                         content += "<td>" + childX.child("dni").val() + "</td>";
                         content += "<td>" + childX.child("email").val() + "</td>";
-                        
+
                     } else {
                         content += '<tr><td><a onclick=storeUIDSelected("' + childX.key + '","appointment")>' + childX.child("name").val() + "</a></td>";
                     }
@@ -896,9 +958,11 @@ function setMedicalHistory() {
     document.getElementById("all_prescriptions").style.display = "none";
     var id = sessionStorage.getItem("id");
     document.getElementById("prescribe").style.display = "none";
+    document.getElementById("editHistory").style.display = "none";
     if (sessionStorage.getItem("type") !== "patient") {
         id = sessionStorage.getItem("id_users");
         document.getElementById("prescribe").style.display = "block";
+        document.getElementById("editHistory").style.display = "block";
     }
     firebase.database().ref('MedicalHistory/' + id).once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
@@ -932,6 +996,46 @@ function setMedicalHistory() {
                 document.getElementById("allergies").innerHTML = childX.val();
             if (childX.key === "diseases")
                 document.getElementById("diseases").innerHTML = childX.val();
+        });
+    });
+}
+
+function setMedicalHistoryEdit() {
+    getSessionData();
+    var id = sessionStorage.getItem("id_users");
+
+    firebase.database().ref('MedicalHistory/' + id).once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            if (childX.key === "dni")
+                document.getElementById("dni").value = childX.val();
+            if (childX.key === "name") {
+                document.getElementById("p_name").value = childX.val();
+                sessionStorage.setItem("patient_history", childX.val());
+            }
+            if (childX.key === "sex")
+                document.getElementById("sex").value = childX.val();
+            if (childX.key === "race")
+                document.getElementById("race").value = childX.val();
+            if (childX.key === "birth")
+                document.getElementById("birth").value = childX.val();
+            if (childX.key === "email")
+                document.getElementById("email").value = childX.val();
+            if (childX.key === "phone")
+                document.getElementById("phone").value = childX.val();
+            if (childX.key === "place_of_birth")
+                document.getElementById("p_birth").value = childX.val();
+            if (childX.key === "place_of_residence")
+                document.getElementById("p_residence").value = childX.val();
+            if (childX.key === "weight")
+                document.getElementById("weight").value = childX.val();
+            if (childX.key === "height")
+                document.getElementById("height").value = childX.val();
+            if (childX.key === "marital_status")
+                document.getElementById("marital_status").value = childX.val();
+            if (childX.key === "allergies")
+                document.getElementById("allergies").value = childX.val();
+            if (childX.key === "diseases")
+                document.getElementById("diseases").value = childX.val();
         });
     });
 }
@@ -988,17 +1092,17 @@ function searchPatient() {
         snapshot.forEach(function (childX) {
             if (childX.child("type").val() === "patient" && (childX.child("dni").val().includes(search)) || childX.child("name").val().includes(search)) {
                 sessionStorage.setItem("flag2", "true");
-                var content = "<tr>" + 
+                var content = "<tr>" +
                         "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("dni").val() + "</td>" +
                         "<td>" + childX.child("email").val() + "</td>" +
                         "<td>" + childX.child("phone").val() + "</td>" +
                         "</tr>";
-                
+
             }
             $("#patient_table").append(content);
         });
-        
+
         if (sessionStorage.getItem("flag2") === "false") {
             document.getElementById("nullSearch").innerHTML = "No search results";
         }
@@ -1006,23 +1110,23 @@ function searchPatient() {
     document.getElementById("patient_table").innerHTML = "";
 }
 
-function storeAppointment(hour, date, user, patient, reason){
+function storeAppointment(hour, date, user, patient, reason) {
 
-    var type= sessionStorage.getItem("type");
-    if (type === "doctor"){
+    var type = sessionStorage.getItem("type");
+    if (type === "doctor") {
         sessionStorage.setItem("userType", "medical");
-    }else{
+    } else {
         sessionStorage.setItem("userType", "nursing");
     }
     sessionStorage.setItem("appointment_date", date);
     sessionStorage.setItem("appointment_hour", hour);
     sessionStorage.setItem("appointment_user", user);
-    sessionStorage.setItem("appointment_patient", patient);   
-    sessionStorage.setItem("appointment_reason", reason.replace(":", " ")); 
+    sessionStorage.setItem("appointment_patient", patient);
+    sessionStorage.setItem("appointment_reason", reason.replace(":", " "));
 }
 
 
-function confirmAppointment(){
+function confirmAppointment() {
     alert(sessionStorage.getItem("appointment_patient") + " " + sessionStorage.getItem("appointment_reason") + " " + sessionStorage.getItem("userType"));
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
@@ -1031,10 +1135,10 @@ function confirmAppointment(){
         subtype: sessionStorage.getItem("appointment_reason"),
         type: sessionStorage.getItem("userType")
     });
-    location.reload();  
+    location.reload();
 }
 
-function freeAppointment(){
+function freeAppointment() {
     firebase.database().ref('Appointments/' + sessionStorage.getItem("appointment_user") + '/' + sessionStorage.getItem("appointment_date") + '/' +
             sessionStorage.getItem("appointment_hour")).set({
         state: "free",
@@ -1042,7 +1146,7 @@ function freeAppointment(){
     }).catch(function (error) {
         alert(error);
     });
-    location.reload();  
+    location.reload();
 }
 
 function searchNurses() {
@@ -1052,15 +1156,15 @@ function searchNurses() {
         snapshot.forEach(function (childX) { //Va bajando de forma anidada
             if (childX.child("type").val() === "nurse" && (childX.child("speciality").val() === search)) {
                 sessionStorage.setItem("flag", "true");
-                var content = "<tr>" +//Tabla de dni, nombre, email, phone
+                var content = "<tr>" + //Tabla de dni, nombre, email, phone
                         "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("speciality").val() + "</td>" +
-                         "<td>" + childX.child("phone").val() + "</td>" +
+                        "<td>" + childX.child("phone").val() + "</td>" +
                         "</tr>";
             }
             $("#nurse_table").append(content); //tabla de enfermeros
         });
-        if (sessionStorage.getItem("flag") === "false") { 
+        if (sessionStorage.getItem("flag") === "false") {
             document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
         }
     });
@@ -1075,17 +1179,16 @@ function searchDoctors() {
             if (childX.child("type").val() === "doctor" && (childX.child("speciality").val() === search || childX.child("name").val() === search)) {
                 sessionStorage.setItem("flag", "true");
                 var content = "<tr>" + //Tabla de dni, nombre, email, phone
-                       "<td>" + childX.child("name").val() + "</td>" +
+                        "<td>" + childX.child("name").val() + "</td>" +
                         "<td>" + childX.child("speciality").val() + "</td>" +
-                         "<td>" + childX.child("phone").val() + "</td>" +
+                        "<td>" + childX.child("phone").val() + "</td>" +
                         "</tr>";
             }
             $("#doctor_table").append(content); //tabla de enfermeros
         });
-        if (sessionStorage.getItem("flag") === "false") { 
+        if (sessionStorage.getItem("flag") === "false") {
             document.getElementById("nullSearch").innerHTML = "No search results"; //Si no encuentra o no pone nada en el buscador
         }
     });
     document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
 }
-
