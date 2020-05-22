@@ -836,6 +836,7 @@ function showAllPrescriptions() {
     }
 }
 
+
 function resetAlertOptions() {
     getSessionData();
     document.getElementById("alert_time").value = sessionStorage.getItem("alert_time");
