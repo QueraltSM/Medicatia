@@ -158,7 +158,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="page-title">Request an appointment</h3>
+                                <h3 class="page-title">Settings</h3>
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
                         <div class="col-xl-12 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h4 class="card-title">Appointment data</h4>
+                                    <h4 class="card-title">Alert appointment</h4>
                                 </div>
                                 <div class="card-body">
                                     <input type="checkbox" id="alert_notifications" onclick="toggleNotifications()" data-toggle="toggle" data-size="mini"> Alert notifications

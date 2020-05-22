@@ -337,7 +337,7 @@ function update() {
         address: document.getElementById("address").value,
         phone: phone,
         information: document.getElementById("information").value,
-        category: category
+        speciality: category
     });
     saveImage(sessionStorage.getItem("id_users"), "edit");
 }
@@ -937,7 +937,7 @@ function doInBackground() {
 }
 
 function saveIncidence() {
-    var now = ("0" + (new Date().getDate())).slice(-2)+ "-" +  ("0" + (new Date().getMonth())).slice(-2) + "-" + new Date().getFullYear() + " " +  ("0" + (new Date().getHours())).slice(-2)+ ":" +  ("0" + (new Date().getMinutes())).slice(-2);
+    var now = ("0" + (new Date().getDate())).slice(-2)+ "-" +  ("0" + (new Date().getMonth())).slice(-2) + "-" + new Date().getFullYear() + " " +  ("0" + (new Date().getHours())).slice(-2)+ ":" +  ("0" + (new Date().getMinutes())).slice(-2) + ":" +  ("0" + (new Date().getSeconds())).slice(-2);
     firebase.database().ref('Incidences/' + now).set({
         patient: sessionStorage.getItem("id"),
         incidence: document.getElementById("incidence").value
