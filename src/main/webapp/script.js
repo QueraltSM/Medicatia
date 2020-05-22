@@ -75,6 +75,7 @@ function connectToFirebase() {
 function setAdminStyle() {
     document.getElementById("adduser_menu_section").style.display = "block";
     document.getElementById("history_menu_section").style.display = "none";
+    document.getElementById("communicate_incidences_menu_section").style.display = "none";
     if (document.getElementById("administrators_section"))
         document.getElementById("administrators_section").style.display = "block";
     if (document.getElementById("doctors_section"))
@@ -102,6 +103,8 @@ function setUserStyle(type) {
     if (type === "administrator")
         setAdminStyle();
     else {
+        document.getElementById("communicate_incidences_menu_section").style.display = "block";
+        document.getElementById("all_incidences_menu_section").style.display = "none";
         if (document.getElementById("administrators_section"))
             document.getElementById("administrators_section").style.display = "none";
         document.getElementById("administrators_menu_section").style.display = "none";
@@ -934,7 +937,6 @@ function doInBackground() {
 }
 
 function saveIncidence() {
-    getSessionData();
     var now = ("0" + (new Date().getDate())).slice(-2)+ "-" +  ("0" + (new Date().getMonth())).slice(-2) + "-" + new Date().getFullYear() + " " +  ("0" + (new Date().getHours())).slice(-2)+ ":" +  ("0" + (new Date().getMinutes())).slice(-2);
     firebase.database().ref('Incidences/' + now).set({
         patient: sessionStorage.getItem("id"),
@@ -944,5 +946,29 @@ function saveIncidence() {
             alert(error);
         else
             window.location = "home.jsp";
+    });
+}
+
+function getIncidencesData() {
+    getSessionData();
+    firebase.database().ref('Incidences/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (snapshotChild) {
+           var date = snapshotChild.key.split(' ').join("|");
+           firebase.database().ref('Users/' + snapshotChild.child("patient").val()).once('value').then(function (users_snapshot) {
+                $("#incidences_table").append('<tr><td>' + snapshotChild.key + '</td><td>' + users_snapshot.child("name").val() + '</td><td><a class="btn btn-sm bg-success-light mr-2"><i class="fe fe-eye"></i>View</a><a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=savePickedIncidence("' + date + '") ><i class="fe fe-trash"></i> Resolved</a></td></tr>');  
+           });
+        });
+    }); 
+}
+
+function savePickedIncidence(date) {
+    sessionStorage.setItem("last_incidence_selected", date.split('|').join(" "));
+}
+
+function deleteIncidence() {
+    firebase.database().ref("Incidences/").child(sessionStorage.getItem("last_incidence_selected")).remove().then(function () {
+        window.location = "incidences.jsp";
+    }).catch(function (error) {
+        alert(error);
     });
 }

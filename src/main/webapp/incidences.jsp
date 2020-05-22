@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
 
@@ -17,18 +16,14 @@
         <!-- Feathericon CSS -->
         <link rel="stylesheet" href="assets/css/feathericon.min.css">
 
-        <!-- Select2 CSS -->
-        <link rel="stylesheet" href="assets/css/select2.min.css">
+        <!-- Datatables CSS -->
+        <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
 
-        <!--[if lt IE 9]>
-                <script src="assets/js/html5shiv.min.js"></script>
-                <script src="assets/js/respond.min.js"></script>
-        <![endif]-->
     </head>
-    <body onload="resetAppointmentForm()">
+    <body onload='getIncidencesData()'>
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -51,6 +46,12 @@
                     <i class="fe fe-text-align-left"></i>
                 </a>
 
+                <div class="top-nav-search">
+                    <form>
+                        <input type="text" class="form-control" placeholder="Search here">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                    </form>
+                </div>
 
                 <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
@@ -60,8 +61,6 @@
 
                 <!-- Header Right Menu -->
                 <ul class="nav user-menu">
-
-
                     <!-- User Menu -->
                     <li class="nav-item dropdown has-arrow">
                         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
@@ -158,62 +157,53 @@
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
-                            <div class="col">
-                                <h3 class="page-title">Request an appointment</h3>
+                            <div class="col-sm-12">
+                                <h3 class="page-title">All incidences</h3>
                             </div>
                         </div>
                     </div>
                     <!-- /Page Header -->
-
                     <div class="row">
-                        <div class="col-xl-12 d-flex">
-                            <div class="card flex-fill">
-                                <div class="card-header">
-                                    <h4 class="card-title">Appointment data</h4>
-                                </div>
+                        <div class="col-sm-12">
+                            <div class="card">
                                 <div class="card-body">
-                                    <form onsubmit="checkAvailability();
-                                            return false">
-                                        <div class="form-group row">
-                                            <label class="col-lg-3 col-form-label">Date</label>
-                                            <div class="col-lg-9">
-                                                <input type="text" placeholder="Pick a date" class="form-control" id="datepicker" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row" id="Rol">
-                                            <label class="col-lg-3 col-form-label">Type</label>
-                                            <div class="col-lg-9">
-                                                <select class="select" id="appointment_subtype">
-                                                    <option value="First visit">First visit</option>
-                                                    <option value="Check">Check</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Search</button>
-                                        </div>
-                                    </form>
-                                    <form onsubmit="requestAppointment();
-                                            return false">
-                                    <div class="form-group row" id="all_appointments">
-                                        <label class="col-lg-3 col-form-label">All appointments</label>
-                                        <div class="col-lg-9">
-                                            <select class="select" id="all_appointments_selection">
-                                            </select>
-                                            <div class="text-right" id="request_appointment"><br>
-                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Request</button>
-                                        </div>
-                                        </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-center mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>User</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="incidences_table">
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <!-- /Page Wrapper -->
         </div>
-        <!-- /Main Wrapper -->
+        <!-- Delete Modal -->
+        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <h4 class="modal-title">Resolved</h4>
+                            <p class="mb-4">Have you resolved the incidence?</p>
+                            <button type="button" class="btn btn-primary" onclick="deleteIncidence()">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /Delete Modal -->
         <!-- /Main Wrapper -->
         <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
@@ -222,22 +212,12 @@
         <script src="assets/js/bootstrap.min.js"></script>
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-        <!-- Select2 JS -->
-        <script src="assets/js/select2.min.js"></script>
+        <!-- Datatables JS -->
+        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="assets/plugins/datatables/datatables.min.js"></script>
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
         <script src="script.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/resources/demos/style.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script>
-           $(function () {
-                $("#datepicker").datepicker({
-                    dateFormat: 'dd/mm/yy'
-                });
-            });
-        </script>
     </body>
 </html>
