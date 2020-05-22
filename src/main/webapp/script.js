@@ -880,7 +880,7 @@ function showAlert() {
 }
 
 function checkNotifications() {
-    var day = ("0" + (new Date().getDate()+1)).slice(-2);
+    var day = ("0" + (new Date().getDate())).slice(-2);
     var month = ("0" + (new Date().getMonth() + 1)).slice(-2);
     var today = day + "/" + month + "/" + new Date().getFullYear();
     var date1 = today + " " + ("0" + (new Date().getHours())).slice(-2) + ":" + ("0" + (new Date().getMinutes())).slice(-2);
@@ -933,3 +933,16 @@ function doInBackground() {
     }
 }
 
+function saveIncidence() {
+    getSessionData();
+    var now = ("0" + (new Date().getDate())).slice(-2)+ "-" +  ("0" + (new Date().getMonth())).slice(-2) + "-" + new Date().getFullYear() + " " +  ("0" + (new Date().getHours())).slice(-2)+ ":" +  ("0" + (new Date().getMinutes())).slice(-2);
+    firebase.database().ref('Incidences/' + now).set({
+        patient: sessionStorage.getItem("id"),
+        incidence: document.getElementById("incidence").value
+    }, function (error) {
+        if (error)
+            alert(error);
+        else
+            window.location = "home.jsp";
+    });
+}

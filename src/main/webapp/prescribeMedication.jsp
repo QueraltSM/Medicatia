@@ -65,7 +65,7 @@
                 <!-- /Header Right Menu -->
             </div>
             <!-- /Header -->
-            <!-- Sidebar -->
+                        <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -114,6 +114,9 @@
                             </li>
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
+                            </li>
+                            <li>
+                                <a href="comunicateIncidence.jsp"><i class="fe fe-comment"></i> <span>Communicate incidence</span></a>
                             </li>
                             <li>
                                 <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
