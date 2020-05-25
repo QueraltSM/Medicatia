@@ -23,7 +23,7 @@
         <link rel="stylesheet" href="assets/css/style.css">
 
     </head>
-    <body onload='getAppointmentsData("<%=request.getParameter("state")%>")'>
+    <body onload='getAppointmentsData("<%=request.getParameter("state")%>","<%=request.getParameter("type")%>")'>
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -48,8 +48,11 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                        <!--<input type="text" class="form-control" placeholder="Search here">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
+                        <!--<input type="text" class="form-control" id="search_appointment" placeholder="Search here">-->
+                        <input type="text" class="form-control" placeholder="Search by date" id="search_datepicker">              
+                        <button class="btn" type="button" onclick='searchAppointments("<%=request.getParameter("state")%>","<%=request.getParameter("type")%>")'><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -168,7 +171,7 @@
                             <div class="card">
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0">
+                                        <table class="table table-hover table-center mb-0" id="nullAppoinments">
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
@@ -222,5 +225,19 @@
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
         <script src="script.js"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script>
+           $(function () {
+                $("#datepicker").datepicker({
+                    dateFormat: 'dd/mm/yy'
+                });
+                $("#search_datepicker").datepicker({
+                    dateFormat: 'dd/mm/yy'
+                });
+            });
+        </script>
     </body>
 </html>
