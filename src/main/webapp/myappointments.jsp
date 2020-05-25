@@ -23,7 +23,7 @@
         <link rel="stylesheet" href="assets/css/style.css">
 
     </head>
-    <body onload='getAppointmentsData("<%=request.getParameter("state")%>","<%=request.getParameter("type")%>")'>
+    <body onload='getAppointmentsData("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'>
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -48,11 +48,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <!--<input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>-->
-                        <!--<input type="text" class="form-control" id="search_appointment" placeholder="Search here">-->
-                        <input type="text" class="form-control" placeholder="Search by date" id="search_datepicker">              
-                        <button class="btn" type="button" onclick='searchAppointments("<%=request.getParameter("state")%>","<%=request.getParameter("type")%>")'><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search_appointment" placeholder="Search by specialist">
+                        <button class="btn" type="button" onclick='searchAppointmentsBySpecialist("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -91,7 +88,7 @@
 
             </div>
             <!-- /Header -->
-                       <!-- Sidebar -->
+            <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -108,28 +105,28 @@
                             <li id="history_menu_section">
                                 <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
-                           <li class="has-submenu" id="appointments_menu_section">
+                            <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu"  id="medical_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu" id="nursing_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li id="administrators_menu_section">
+                            </li>
+                            <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -165,35 +162,38 @@
                             </div>
                         </div>
                     </div>
-                    <!-- /Page Header -->
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" id="nullAppoinments">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Time</th>
-                                                    <th>Patient</th>
-                                                    <th>Type</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="appointments_table">
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <div style="float: right" class="top-nav-search">
+                                        <form class="top-nav-search">
+                                            <input type="text" class="form-control" placeholder="Search by date" id="search_datepicker">              
+                                            <button class="btn" type="button" onclick='searchAppointmentsByDate("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-calendar"></i></button>
+                                        </form>
+                                    </div><br><br><br><br>
+                                    <div id="nullAppoinments"></div>
+                                    <table class="table table-hover table-center mb-0" id="data">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th id="type_of_user">Patient</th>
+                                                <th>Type</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="appointments_table">
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- /Page Wrapper -->
         </div>
+        <!-- /Page Wrapper -->
         <!-- Delete Modal -->
         <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
@@ -230,14 +230,14 @@
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
         <script>
-           $(function () {
-                $("#datepicker").datepicker({
-                    dateFormat: 'dd/mm/yy'
-                });
-                $("#search_datepicker").datepicker({
-                    dateFormat: 'dd/mm/yy'
-                });
-            });
+                                $(function () {
+                                    $("#datepicker").datepicker({
+                                        dateFormat: 'dd/mm/yy'
+                                    });
+                                    $("#search_datepicker").datepicker({
+                                        dateFormat: 'dd/mm/yy'
+                                    });
+                                });
         </script>
     </body>
 </html>

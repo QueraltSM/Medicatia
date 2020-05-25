@@ -1622,11 +1622,10 @@ html.menu-opened body {
 }
 .top-nav-search form {
     margin-top: 10px;
-	position: relative;
+    position: relative;
     width: 230px;
 }
 .top-nav-search .form-control {
-  
     border-color: rgba(0, 0, 0, 0.1);
     border-radius: 50px;
     color: #333;
