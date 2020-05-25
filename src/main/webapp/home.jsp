@@ -73,8 +73,8 @@
                                     <p class="text-muted mb-0" id="type"></p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" >My Profile</a>
-                            <a class="dropdown-item">Settings</a>
+                            <a class="dropdown-item" hre>My Profile</a>
+                            <a class="dropdown-item" href="settings.jsp">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
                     </li>
@@ -102,28 +102,28 @@
                             <li id="history_menu_section">
                                 <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
-                           <li class="has-submenu" id="appointments_menu_section">
+                            <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu"  id="medical_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li class="has-submenu" id="nursing_appointments_menu_section">
+                            </li>
+                            <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
-                           </li>
-                           <li id="administrators_menu_section">
+                            </li>
+                            <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -135,7 +135,9 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
+                            <li>
+                                <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -228,7 +230,7 @@
                                     </div></a>
                             </div>
                         </div>     
-                        
+
                         <div class="col-xl-3 col-sm-6 col-12" id="medical_appointments_section">
                             <div class="card">
                                 <a href="appointments.jsp?t=medical" style="color:black;"><div class="card-body" >
@@ -246,7 +248,7 @@
                                     </div></a>
                             </div>
                         </div>     
-                        
+
                         <div class="col-xl-3 col-sm-6 col-12" id="nursing_appointments_section">
                             <div class="card">
                                 <a href="appointments.jsp?t=nursing" style="color:black;"><div class="card-body" >
@@ -264,8 +266,8 @@
                                     </div></a>
                             </div>
                         </div>  
-                        
-                       
+
+
                         <div class="col-xl-3 col-sm-6 col-12" id="administrators_section">
                             <div class="card">
                                 <a href="administrators.jsp" style="color:black;"><div class="card-body">

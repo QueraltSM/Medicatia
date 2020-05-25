@@ -35,6 +35,7 @@ function replaceLocation(name, type) {
     sessionStorage.setItem("type", type);
     sessionStorage.setItem("id", firebase.auth().currentUser.uid);
     window.location.replace("home.jsp");
+    doInBackground();
     if (type === "doctor") {
         sessionStorage.setItem("appointment_type", "medical");
     } else if (type === "nurse") {
@@ -153,6 +154,7 @@ function getSessionData() {
     connectToFirebase();
     setUserData();
     setUserStyle(sessionStorage.getItem("type"));
+    setInterval(doInBackground, 5000);
 }
 
 function countAllAppointments() {
@@ -1090,6 +1092,107 @@ function showAllPrescriptions() {
         document.getElementById("all_prescriptions").style.display = "block";
         document.getElementById("prescriptions_btn").innerHTML = "Hide";
         getPrescriptionsFiles();
+    }
+}
+
+function resetAlertOptions() {
+    getSessionData();
+    document.getElementById("alert_time").value = sessionStorage.getItem("alert_time");
+    if (sessionStorage.getItem("alert_notifications") === "true") {
+        document.getElementById("alert_notifications").checked = true;
+        document.getElementById("alert_time").disabled = false;
+    } else {
+        document.getElementById("alert_notifications").checked = false;
+        document.getElementById("alert_time").disabled = true;
+    }
+}
+
+function changeNotificationTime() {
+    sessionStorage.setItem("alert_time", document.getElementById("alert_time").value);
+    window.location = "home.jsp";
+}
+
+function toggleNotifications() {
+    var checked = document.getElementById("alert_notifications").checked;
+    if (checked === true) {
+        document.getElementById("alert_time").disabled = false;
+        sessionStorage.setItem("alert_notifications", "true");
+    } else {
+        document.getElementById("alert_time").disabled = true;
+        sessionStorage.setItem("alert_notifications", "false");
+    }
+}
+
+function showAlert() {
+    if (sessionStorage.getItem("first_time") === null) {
+        sessionStorage.setItem("first_time", "yes");
+    }
+    if (sessionStorage.getItem("first_time") === "yes") {
+        var alert_time = sessionStorage.getItem("alert_time");
+        if (alert_time > 3) {
+            alert("You have an appointment in "+alert_time); 
+        } else {
+            alert("You have an appointment in "+alert_time);
+        }
+        sessionStorage.setItem("first_time", "no");
+    }
+}
+
+function checkNotifications() {
+    var day = ("0" + (new Date().getDate())).slice(-2);
+    var month = ("0" + (new Date().getMonth() + 1)).slice(-2);
+    var today = day + "/" + month + "/" + new Date().getFullYear();
+    var date1 = today + " " + ("0" + (new Date().getHours())).slice(-2) + ":" + ("0" + (new Date().getMinutes())).slice(-2);
+    if (sessionStorage.getItem("type") !== "patient") {
+        firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                var appointment_date = childX.key.split("-").join("/");
+                //alert(appointment_date + " " + today);
+                if (today === appointment_date) {
+                    childX.forEach(function (snapshotChild) {
+                        if (snapshotChild.child("state").val() === "accepted") {
+                            var hour_date = snapshotChild.key;
+                            var hour = hour_date.substring(0, hour_date.indexOf("-"));
+                            var date2 = appointment_date + " " + hour;
+                            //alert(date2 + "   " + date1);
+                            if (date2 > date1) {
+                                //alert("Hola");
+                                var date3 = new Date();
+                                date3.setHours(hour.substring(0, hour.indexOf(":")));
+                                date3.setMinutes(hour.substring(hour.indexOf(":") + 1, hour.length));
+                                var alert_time = sessionStorage.getItem("alert_time");
+                                alert_time = alert_time.substring(0, alert_time.indexOf(" "));
+                                var before_time = date3.setMinutes(date3.getMinutes()-alert_time);
+                                if (alert_time <= 3) {
+                                    before_time = date3.setHours(date3.getHours()-alert_time);
+                                }
+                                var date4 = new Date(before_time);
+                                var time_date4 = ("0" + (date4.getHours())).slice(-2) + ":" + ("0" + (date4.getMinutes())).slice(-2);
+                                var time_now = ("0" + (new Date().getHours())).slice(-2) + ":" +("0" + (new Date().getMinutes())).slice(-2);
+                                //alert(time_date4 + " " + time_now);
+                                if (time_date4 === time_now) {
+                                    showAlert();
+                                } else {
+                                    sessionStorage.getItem("first_time", null);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    }
+}
+
+function doInBackground() {
+    if (sessionStorage.getItem("alert_notifications") === null) {
+        sessionStorage.setItem("alert_notifications", "true");
+    }
+    if (sessionStorage.getItem("alert_time") === null) {
+        sessionStorage.setItem("alert_time", "15 minutes");
+    }
+    if (sessionStorage.getItem("alert_notification") !== "false") {
+        checkNotifications();
     }
 }
 
