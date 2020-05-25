@@ -1192,3 +1192,5 @@ function searchDoctors() {
     });
     document.getElementById("doctor_table").innerHTML = ""; //Pone la tabla solo con el nurse buscado
 }
+
+//Starting HU-33
