@@ -76,6 +76,7 @@ function connectToFirebase() {
 function setAdminStyle() {
     document.getElementById("adduser_menu_section").style.display = "block";
     document.getElementById("history_menu_section").style.display = "none";
+    document.getElementById("communicate_incidences_menu_section").style.display = "none";
     if (document.getElementById("administrators_section"))
         document.getElementById("administrators_section").style.display = "block";
     if (document.getElementById("doctors_section"))
@@ -103,6 +104,8 @@ function setUserStyle(type) {
     if (type === "administrator")
         setAdminStyle();
     else {
+        document.getElementById("communicate_incidences_menu_section").style.display = "block";
+        document.getElementById("all_incidences_menu_section").style.display = "none";
         if (document.getElementById("administrators_section"))
             document.getElementById("administrators_section").style.display = "none";
         document.getElementById("administrators_menu_section").style.display = "none";
@@ -1130,9 +1133,9 @@ function showAlert() {
     if (sessionStorage.getItem("first_time") === "yes") {
         var alert_time = sessionStorage.getItem("alert_time");
         if (alert_time > 3) {
-            alert("You have an appointment in "+alert_time); 
+            alert("You have an appointment in " + alert_time);
         } else {
-            alert("You have an appointment in "+alert_time);
+            alert("You have an appointment in " + alert_time);
         }
         sessionStorage.setItem("first_time", "no");
     }
@@ -1162,13 +1165,13 @@ function checkNotifications() {
                                 date3.setMinutes(hour.substring(hour.indexOf(":") + 1, hour.length));
                                 var alert_time = sessionStorage.getItem("alert_time");
                                 alert_time = alert_time.substring(0, alert_time.indexOf(" "));
-                                var before_time = date3.setMinutes(date3.getMinutes()-alert_time);
+                                var before_time = date3.setMinutes(date3.getMinutes() - alert_time);
                                 if (alert_time <= 3) {
-                                    before_time = date3.setHours(date3.getHours()-alert_time);
+                                    before_time = date3.setHours(date3.getHours() - alert_time);
                                 }
                                 var date4 = new Date(before_time);
                                 var time_date4 = ("0" + (date4.getHours())).slice(-2) + ":" + ("0" + (date4.getMinutes())).slice(-2);
-                                var time_now = ("0" + (new Date().getHours())).slice(-2) + ":" +("0" + (new Date().getMinutes())).slice(-2);
+                                var time_now = ("0" + (new Date().getHours())).slice(-2) + ":" + ("0" + (new Date().getMinutes())).slice(-2);
                                 //alert(time_date4 + " " + time_now);
                                 if (time_date4 === time_now) {
                                     showAlert();
@@ -1350,4 +1353,36 @@ function sendEmail() {
     }
     //alert("Mensaje enviado con exito");
     //window.location = "patients.jsp";
+}
+
+function getIncidencesData() {
+    getSessionData();
+    var flag = false;
+    firebase.database().ref('Incidences/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (snapshotChild) {
+            var date = snapshotChild.key.split(' ').join("|");
+            var time = snapshotChild.key.split(' ');
+            if(time !== null){
+                flag = true;
+            }
+            firebase.database().ref('Users/' + snapshotChild.child("patient").val()).once('value').then(function (users_snapshot) {
+                $("#incidences_table").append('<tr><td>' + time[0] + '</td><td>' + time[1] + '</td><td>' + users_snapshot.child("name").val() + '</td><td><a class="btn btn-sm bg-success-light mr-2"><i class="fe fe-eye"></i>View</a><a class="btn btn-sm bg-danger-light" data-toggle="modal" href="#delete_modal" onclick=savePickedIncidence("' + date + '") ><i class="fe fe-trash"></i> Resolved</a></td></tr>');
+            });
+        });
+        if (flag === false) {
+            document.getElementById("nullIncidences").innerHTML = "You dont have any pending incidences";
+        }
+    });
+}
+
+function savePickedIncidence(date) {
+    sessionStorage.setItem("last_incidence_selected", date.split('|').join(" "));
+}
+
+function deleteIncidence() {
+    firebase.database().ref("Incidences/").child(sessionStorage.getItem("last_incidence_selected")).remove().then(function () {
+        window.location = "incidences.jsp";
+    }).catch(function (error) {
+        alert(error);
+    });
 }

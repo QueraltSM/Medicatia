@@ -135,6 +135,9 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
+                            <li id="all_incidences_menu_section">
+                                <a href="incidences.jsp"><i class="fe fe-bookmark"></i> <span>Incidences</span></a>
+                            </li>
                             <li>
                                 <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
                             </li>
