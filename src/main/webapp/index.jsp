@@ -91,6 +91,8 @@
                                             </div>
 
                                             <button class="btn btn-primary btn-block btn-lg login-btn" type="button" onclick="login()">Login</button>
+                                            <br>
+                                            <center><a onclick="sendPasswordResetEmail()"><h6>I forgot password</h6></a></center>
                                             <div class="login-or">
                                                 <span class="or-line"></span>
                                             </div>

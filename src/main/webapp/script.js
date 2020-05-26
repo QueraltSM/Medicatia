@@ -1100,3 +1100,29 @@ function showNullAppointment(state) {
     document.getElementById("nullAppoinments").style.display = "block";
     document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment matched";    
 }
+
+function deleteFromDB() {
+    firebase.database().ref("Users/" + sessionStorage.getItem("id")).remove().then(function () {
+        deleteFromStorage();
+    }).catch(function (error) {
+        alert(error);
+    });
+}
+
+function deleteFromStorage() {
+    var storageRef = firebase.storage().ref();
+    var storeRef = storageRef.child(sessionStorage.getItem("id") + ".jpg");
+    storeRef.delete().then(function () {
+        window.location = "index.jsp";
+    }).catch(function (error) {
+        alert(error);
+    });
+}
+
+function deleteAccount(){
+    firebase.auth().currentUser.delete().then(function() {
+        deleteFromDB();
+    }).catch(function(error) {
+        alert("Account cannot be permanently deleted");
+    });
+}

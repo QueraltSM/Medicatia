@@ -281,7 +281,7 @@
                                             </div>
                                         </div>
                                         <div class="text-right">
-                                            <button type="submit" class="btn btn-primary" data-dismiss="modal">Save changes</button>
+                                            <br><button type="submit" class="btn btn-primary" data-dismiss="modal">Save changes</button>    <a class="btn btn-danger" onclick="deleteAccount()"><i class="fe fe-trash"></i> Delete account</a><br>
                                         </div>
                                        </form>
                                 </div>
