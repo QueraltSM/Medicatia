@@ -19,6 +19,7 @@
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/login_style.css">
 
+
     </head>
     <body class="account-page">
 
@@ -92,7 +93,7 @@
 
                                             <button class="btn btn-primary btn-block btn-lg login-btn" type="button" onclick="login()">Login</button>
                                             <br>
-                                            <center><a onclick="sendPasswordResetEmail()"><h6>I forgot password</h6></a></center>
+                                            <center><a onclick="openEmailRecuperationForm()"><h6>I forgot password</h6></a></center>
                                             <div class="login-or">
                                                 <span class="or-line"></span>
                                             </div>
@@ -113,111 +114,118 @@
             </div>
             <!-- /Page Content -->
         </div>
-    </div>
-</div>
-</div>
-<!-- /Footer Top -->
-            <footer class="footer">
-                <div class="footer-top">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col-lg-7 col-md-12">
-                                <div class="footer-widget footer-about">
-                                    <div class="footer-logo">
-                                        <img src="assets/img/logo.png" alt="logo">
-                                    </div>
-                                    <div class="footer-about-content">
-                                        <p>We are one of the best web applications for managing medical appointments.
+
+        <div class="modal fade" id="email_modal" aria-hidden="true" role="dialog">
+            <div class="modal-dialog modal-dialog-centered" role="document" >
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="form-content p-2">
+                            <form onsubmit="sendPasswordResetEmail(); return false">
+                                <h4 class="modal-title">Recover password</h4><br>
+                                <input type="email" placeholder="Email" class="form-control" id="email_recuperation" required><br>
+                                <center>
+                                    <button type="submit" class="btn btn-primary">Send</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </center>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- /Footer Top -->
+        <footer class="footer">
+            <div class="footer-top">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-7 col-md-12">
+                            <div class="footer-widget footer-about">
+                                <div class="footer-logo">
+                                    <img src="assets/img/logo.png" alt="logo">
+                                </div>
+                                <div class="footer-about-content">
+                                    <p>We are one of the best web applications for managing medical appointments.
                                         <br>Access now and request your appointment. </p>
-                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6">
-                                <div class="footer-widget footer-contact">
-                                    <h2 class="footer-title">Contact Us</h2>
-                                    <div class="footer-contact-info">
-                                        <div class="footer-address">
-                                            <span><i class="fas fa-map-marker-alt"></i></span>
-                                            <p>Las Palmas University, Las Palmas de Gran Canaria</p>
-                                        </div>
-                                        <p>
-                                            <i class="fas fa-phone-alt"></i>
-                                            +34 928 35 00 16
-                                        </p>
-                                        <p class="mb-0">
-                                            <i class="fas fa-envelope"></i>
-                                            medicatiateam@gmail.com
-                                        </p>
+                        </div>
+                        <div class="col-lg-3 col-md-6">
+                            <div class="footer-widget footer-contact">
+                                <h2 class="footer-title">Contact Us</h2>
+                                <div class="footer-contact-info">
+                                    <div class="footer-address">
+                                        <span><i class="fas fa-map-marker-alt"></i></span>
+                                        <p>Las Palmas University, Las Palmas de Gran Canaria</p>
                                     </div>
+                                    <p>
+                                        <i class="fas fa-phone-alt"></i>
+                                        +34 928 35 00 16
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-envelope"></i>
+                                        medicatiateam@gmail.com
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="footer-bottom">
-                    <div class="container-fluid">
+            </div>
+            <div class="footer-bottom">
+                <div class="container-fluid">
 
-                        <!-- Copyright -->
-                        <div class="copyright">
-                            <div class="row">
-                                <div class="col-md-6 col-lg-6">
-                                    <div class="copyright-text">
-                                        <p class="mb-0">&copy; 2020 Medicatia. All rights reserved.</p>
-                                    </div>
+                    <!-- Copyright -->
+                    <div class="copyright">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <div class="copyright-text">
+                                    <p class="mb-0">&copy; 2020 Medicatia. All rights reserved.</p>
                                 </div>
-                                <div class="col-md-6 col-lg-6">
-                                    <div class="copyright-menu">
-                                        <ul class="policy-menu">
-                                            <li><a>Terms and Conditions</a></li>
-                                            <li><a>Policy</a></li>
-                                        </ul>
-                                    </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6">
+                                <div class="copyright-menu">
+                                    <ul class="policy-menu">
+                                        <li><a>Terms and Conditions</a></li>
+                                        <li><a>Policy</a></li>
+                                    </ul>
+                                </div>
 
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </footer>
+            </div>
+        </footer>
 
-</div>
-</div>
-</div>
-<!-- /Copyright -->
+        <!-- /Footer -->
 
-</div>
-</div>
-<!-- /Footer Bottom -->
+        <!-- /Main Wrapper -->
 
-</footer>
-<!-- /Footer -->
+        <!-- jQuery -->
+        <script src="assets/js/login_jquery.min.js"></script>
 
-<!-- /Main Wrapper -->
+        <!-- Bootstrap Core JS -->
+        <script src="assets/js/login_popper.min.js"></script>
+        <script src="assets/js/login_bootstrap.min.js"></script>
 
-<!-- jQuery -->
-<script src="assets/js/login_jquery.min.js"></script>
-
-<!-- Bootstrap Core JS -->
-<script src="assets/js/login_popper.min.js"></script>
-<script src="assets/js/login_bootstrap.min.js"></script>
-
-<!-- Custom JS -->
-<script src="assets/js/login_script.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css" rel="stylesheet"/>
-    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
-    <script>
-        var config = {
-                    apiKey: "AIzaSyDtbVv6lvwbtPpqUfVWWyQx42GPE8XTlos",
-                    authDomain: "medicatia-e3758.firebaseapp.com",
-                    databaseURL: "https://medicatia-e3758.firebaseio.com",
-                    projectId: "medicatia-e3758",
-                    storageBucket: "medicatia-e3758.appspot.com",
-                    messagingSenderId: "649740038709",
-                    appId: "1:649740038709:web:89ba42e53791b90017377c"
-                };
-                firebase.initializeApp(config);
-    </script>
-    <script src="script.js"></script>
-</body>
+        <!-- Custom JS -->
+        <script src="assets/js/login_script.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css" rel="stylesheet"/>
+        <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+        <script>
+                                                    var config = {
+                                                        apiKey: "AIzaSyDtbVv6lvwbtPpqUfVWWyQx42GPE8XTlos",
+                                                        authDomain: "medicatia-e3758.firebaseapp.com",
+                                                        databaseURL: "https://medicatia-e3758.firebaseio.com",
+                                                        projectId: "medicatia-e3758",
+                                                        storageBucket: "medicatia-e3758.appspot.com",
+                                                        messagingSenderId: "649740038709",
+                                                        appId: "1:649740038709:web:89ba42e53791b90017377c"
+                                                    };
+                                                    firebase.initializeApp(config);
+        </script>
+        <script src="script.js"></script>
+    </body>
 </html>

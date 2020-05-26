@@ -1126,3 +1126,15 @@ function deleteAccount(){
         alert("Account cannot be permanently deleted");
     });
 }
+
+function sendPasswordResetEmail() {
+    firebase.auth().sendPasswordResetEmail(document.getElementById("email_recuperation").value).then(function() {
+        alert("Check out your email to change password");
+    }).catch(function(error) {
+        alert("Email to change password can not be sent. Try again");
+    });
+}
+
+function openEmailRecuperationForm() {
+    $('#email_modal').modal('show');
+}
