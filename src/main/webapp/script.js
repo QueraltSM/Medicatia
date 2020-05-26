@@ -1120,7 +1120,6 @@ function searchPatient() {
 }
 
 function storeAppointment(hour, date, user, patient, reason) {
-
     var type = sessionStorage.getItem("type");
     if (type === "doctor") {
         sessionStorage.setItem("userType", "medical");
@@ -1240,11 +1239,22 @@ function sendEmail() {
     if (flag === true && flag2 === true) {
         var yourMessage = document.getElementById("message").value;
         var subject = document.getElementById("subject").value;
-        //alert(sessionStorage.getItem("email_user"));
         document.location.href = "mailto:" + sessionStorage.getItem("email_user") + "?subject="
                 + encodeURIComponent(subject)
                 + "&body=" + encodeURIComponent(yourMessage);
     }
 }
 
-//Starting HU-36
+function saveIncidence() {
+    getSessionData();
+    var now = ("0" + (new Date().getDate())).slice(-2)+ "-" +  ("0" + (new Date().getMonth())).slice(-2) + "-" + new Date().getFullYear() + " " +  ("0" + (new Date().getHours())).slice(-2)+ ":" +  ("0" + (new Date().getMinutes())).slice(-2);
+    firebase.database().ref('Incidences/' + now).set({
+        patient: sessionStorage.getItem("id"),
+        incidence: document.getElementById("incidence").value
+    }, function (error) {
+        if (error)
+            alert(error);
+        else
+            window.location = "home.jsp";
+    });
+}
