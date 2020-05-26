@@ -24,7 +24,17 @@
         <link rel="stylesheet" href="assets/css/style.css">
 
     </head>
-    <body onload='getAppointmentsData("<%=request.getParameter("state")%>","<%=request.getParameter("type")%>")'>
+    <body onload='getAppointmentsData("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'>
+        <%
+            String search_text = "";
+            if (request.getParameter("type").equals("null") && request.getParameter("state").equals("accepted")) {
+                search_text = "Search accepted appointments pacient";
+            } else if (request.getParameter("type").equals("null") && request.getParameter("state").equals("pending")) {
+                search_text = "Search pending appointments pacient";
+            } else {
+                search_text = "Search by specialist";
+            }
+        %>
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -49,8 +59,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" placeholder="Search here">
-                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" id="search_appointment" placeholder="<%=search_text%>">
+                        <button class="btn" type="button" onclick='searchAppointments("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -89,7 +99,7 @@
 
             </div>
             <!-- /Header -->
-                       <!-- Sidebar -->
+            <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -139,7 +149,13 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                                                        <li>
+                            <li id="communicate_incidences_menu_section">
+                                <a href="comunicateIncidence.jsp"><i class="fe fe-comment"></i> <span>Communicate incidence</span></a>
+                            </li>
+                            <li id="all_incidences_menu_section">
+                                <a href="incidences.jsp"><i class="fe fe-bookmark"></i> <span>Incidences</span></a>
+                            </li>
+                            <li>
                                 <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
                             </li>
                         </ul>
@@ -163,22 +179,26 @@
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover table-center mb-0" id="nullAppoinments">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Time</th>
-                                                    <th><%=request.getParameter("table")%></th>
-                                                    <th>Type</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="appointments_table">
-
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <div style="float: right" class="top-nav-search">
+                                        <form class="top-nav-search">
+                                            <input type="text" class="form-control" placeholder="Search by date" id="search_datepicker">              
+                                            <button class="btn" type="button" onclick='searchAppointmentsByDate("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-calendar"></i></button>
+                                        </form>
+                                    </div><br><br><br><br>
+                                    <div id="nullAppoinments"></div>
+                                    <table class="table table-hover table-center mb-0" id="data">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Time</th>
+                                                <th id="type_of_user">Patient</th>
+                                                <th>Type</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="appointments_table">
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
@@ -202,7 +222,7 @@
                 </div>
             </div>
         </div>  
-                                        
+
         <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
                 <div class="modal-content">
@@ -217,8 +237,8 @@
                 </div>
             </div>
         </div>     
-        
-        
+
+
         <div class="modal fade" id="reject_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
                 <div class="modal-content">
@@ -233,8 +253,8 @@
                 </div>
             </div>
         </div>     
-        
-        
+
+
         <!-- /Delete Modal -->
         <!-- /Main Wrapper -->
         <!-- jQuery -->
@@ -251,5 +271,15 @@
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
         <script src="script.js"></script>
+        <script>
+                                $(function () {
+                                    $("#datepicker").datepicker({
+                                        dateFormat: 'dd/mm/yy'
+                                    });
+                                    $("#search_datepicker").datepicker({
+                                        dateFormat: 'dd/mm/yy'
+                                    });
+                                });
+        </script>
     </body>
 </html>

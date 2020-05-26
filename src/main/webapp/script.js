@@ -895,6 +895,14 @@ function setAppointment(date, time, user, subtype, state) {
 
 function setAppointmentsPatients(state, date, hour, user, reason) {
     firebase.database().ref('Users/' + user).once('value').then(function (snapshot2) {
+        if (snapshot2.child("type").val() === "doctor") {
+            document.getElementById("type_of_user").innerHTML = "Doctor";
+        } else if (snapshot2.child("type").val() === "nurse") {
+            document.getElementById("type_of_user").innerHTML = "Nurse";
+        } else if (snapshot2.child("type").val() === "patient") {
+            document.getElementById("type_of_user").innerHTML = "Patient";
+        }
+
         var content = "<tr>" + "<td>" + date + "</td>" +
                 "<td>" + hour + "</td>" +
                 "<td>" + snapshot2.child("name").val() + "</td>" +
@@ -909,6 +917,8 @@ function setAppointmentsPatients(state, date, hour, user, reason) {
 
 function getAppointmentsData(state, type) {
     getSessionData();
+    document.getElementById("nullAppoinments").style.display = "none";
+    document.getElementById("data").style.display = "table";
     var flag = false;
 
     if (type === "null") {
@@ -932,8 +942,10 @@ function getAppointmentsData(state, type) {
                     }
                 });
             });
-            if (flag === false) {
-                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            if (!flag) {
+                document.getElementById("data").style.display = "none";
+                document.getElementById("nullAppoinments").style.display = "block";
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment matched";
             }
         });
     } else {
@@ -949,8 +961,10 @@ function getAppointmentsData(state, type) {
                     });
                 });
             });
-            if (flag === false) {
-                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment";
+            if (!flag) {
+                document.getElementById("data").style.display = "none";
+                document.getElementById("nullAppoinments").style.display = "block";
+                document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment matched";
             }
         });
     }
@@ -1199,6 +1213,119 @@ function doInBackground() {
     }
 }
 
+function searchAppointmentsByDate(state, type) {
+    $("#appointments_table").empty();
+    document.getElementById("nullAppoinments").style.display = "none";
+    document.getElementById("data").style.display = "table";
+    var flag = false;
+    var selected_date = $("#search_datepicker").val().split('/').join("-");
+    if (sessionStorage.getItem("type") === "patient") {
+        firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                childX.forEach(function (childY) {
+                    childY.forEach(function (childZ) {
+                        if (childY.key === selected_date && childZ.child("patient").val() === sessionStorage.getItem("id") && childZ.child("state").val() === state
+                                && childZ.child("type").val() === type) {
+                            flag = true;
+                            setAppointmentsPatients(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
+                        }
+                    });
+                });
+            });
+            if (!flag) {
+                showNullAppointment(state);
+            }
+        });
+    } else {
+        firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                childX.forEach(function (childY) {
+                    childY.forEach(function (childZ) {
+                        if (childX.key === sessionStorage.getItem("id") && childY.key === selected_date && childZ.child("state").val() === state) {
+                            flag = true;
+                            setAppointmentsPatients(state, childY.key, childZ.key, childX.key, childZ.child("subtype").val());
+                        }
+                    });
+                });
+            });
+            if (!flag) {
+                showNullAppointment(state);
+            }
+        });
+    }
+    $("#search_datepicker").val("");
+}
+
+function searchAppointments(state, type) {
+    $("#appointments_table").empty();
+    document.getElementById("nullAppoinments").style.display = "none";
+    document.getElementById("data").style.display = "table";
+    var flag = false;
+    var flag2 = false;
+    var name_entered = document.getElementById("search_appointment").value;
+    if (sessionStorage.getItem("type") === "patient") {
+        firebase.database().ref('Users/').once('value').then(function (user_snapshot) {
+            user_snapshot.forEach(function (user_child) {
+                var specialist_name = user_child.child("name").val();
+                if (specialist_name.includes(name_entered)) {
+                    flag2 = true;
+                    firebase.database().ref('Appointments/' + user_child.key).once('value').then(function (appointment_snapshot) {
+                        appointment_snapshot.forEach(function (date_snapshot) {
+                            date_snapshot.forEach(function (date_child) {
+                                if (date_child.child("patient").val() === sessionStorage.getItem("id") && date_child.child("state").val() === state
+                                        && date_child.child("type").val() === type) {
+                                    flag = true;
+                                    setAppointmentsPatients(state, date_snapshot.key, date_child.key, user_child.key, date_child.child("subtype").val());
+                                }
+                            });
+                        });
+                        if (!flag) {
+                            showNullAppointment(state);
+                        }
+                    });
+                }
+            });
+            if (!flag2) {
+                showNullAppointment(state);
+            }
+        });
+    } else {
+        firebase.database().ref('Users/').once('value').then(function (user_snapshot) {
+            user_snapshot.forEach(function (user_child) {
+                var patient_name = user_child.child("name").val();
+                var patient_id = user_child.key;
+                if (patient_name.includes(name_entered)) {
+                    flag2 = true;
+                    firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (appointment_snapshot) {
+                        appointment_snapshot.forEach(function (date_snapshot) {
+                            date_snapshot.forEach(function (date_child) {
+                                if (date_child.child("patient").val() === patient_id && date_child.child("state").val() === state) {
+                                    flag = true;
+                                    setAppointmentsPatients(state, date_snapshot.key, date_child.key, user_child.key, date_child.child("subtype").val());
+                                }
+                            });
+                        });
+                        if (!flag) {
+                            showNullAppointment(state);
+                        }
+                    });
+                }
+            });
+            if (!flag2) {
+                showNullAppointment(state);
+            }
+        });
+    }
+    document.getElementById("search_appointment").value = "";
+}
+
+
+function showNullAppointment(state) {
+    document.getElementById("data").style.display = "none";
+    document.getElementById("nullAppoinments").style.display = "block";
+    document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment matched";
+}
+
 function searchPatient() {
     var search = document.getElementById("search_patient").value;
     sessionStorage.setItem("flag2", "false");
@@ -1362,7 +1489,7 @@ function getIncidencesData() {
         snapshot.forEach(function (snapshotChild) {
             var date = snapshotChild.key.split(' ').join("|");
             var time = snapshotChild.key.split(' ');
-            if(time !== null){
+            if (time !== null) {
                 flag = true;
             }
             firebase.database().ref('Users/' + snapshotChild.child("patient").val()).once('value').then(function (users_snapshot) {
