@@ -19,7 +19,7 @@
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
-    <body onload="setEmailData()">
+    <body onload="setIncidentData()">
         <div class="main-wrapper">
             <div class="header">
                 <div class="header-left">
@@ -135,7 +135,7 @@
                         <div class="col-xl-12 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h4 class="card-title">Content of email</h4>
+                                    <h4 class="card-title">Notify your Incident</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group row">
@@ -153,7 +153,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <input type="button" class="btn btn-primary" value="Send" onclick="sendEmail()">
+                                        <input type="button" class="btn btn-primary" value="Send" onclick="sendIncident()">
                                     </div>
                                 </div>
                             </div>

@@ -960,6 +960,7 @@ function setEmailData() {
             if (childX.key === sessionStorage.getItem("id_users")) {
                 document.getElementById("send_email_name").innerHTML = "Send email to " + childX.child("name").val();
                 sessionStorage.setItem("email_user", childX.child("email").val());
+
             }
         });
     });
@@ -989,6 +990,35 @@ function sendEmail() {
     }
 
     if (flag === true && flag2 === true) {
+        var yourMessage = document.getElementById("message").value;
+        var subject = document.getElementById("subject").value;
+        document.location.href = "mailto:" + sessionStorage.getItem("email_user") + "?subject="
+                + encodeURIComponent(subject)
+                + "&body=" + encodeURIComponent(yourMessage);
+    }
+}
+
+function setIncidentData(){
+    getSessionData();
+    sessionStorage.setItem("email_user", "admin1@gmail.com");
+    alert(sessionStorage.getItem("email_user"));
+      
+}
+
+function sendIncident() {
+
+    var flag2 = false;
+
+    if (document.getElementById("message").value === '') {
+        document.getElementById("message").style.borderColor = "red";
+        document.getElementById("errorMessage").innerHTML = "You have to put a Message";
+    } else {
+        flag2 = true;
+        document.getElementById("message").style.borderColor = "";
+        document.getElementById("errorMessage").innerHTML = "";
+    }
+
+    if (flag2 === true) {
         var yourMessage = document.getElementById("message").value;
         var subject = document.getElementById("subject").value;
         document.location.href = "mailto:" + sessionStorage.getItem("email_user") + "?subject="

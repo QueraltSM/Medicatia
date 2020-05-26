@@ -139,6 +139,12 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
+                            <li>
+                                <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
+                            </li>
+                            <li id="doctors_menu_section">
+                                <a href="incidents.jsp"><i class="fe fe-user"></i> <span>Incidents</span></a>
+                            </li>
                             
                         </ul>
                     </div>
