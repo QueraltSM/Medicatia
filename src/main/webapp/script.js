@@ -1216,7 +1216,6 @@ function setEmailData() {
 }
 
 function sendEmail() {
-    //alert(document.getElementById("subject").value + " " + document.getElementById("message").value);
     var flag = false;
     var flag2 = false;
 
@@ -1246,6 +1245,6 @@ function sendEmail() {
                 + encodeURIComponent(subject)
                 + "&body=" + encodeURIComponent(yourMessage);
     }
-    //alert("Mensaje enviado con exito");
-    //window.location = "patients.jsp";
 }
+
+//Starting HU-36
