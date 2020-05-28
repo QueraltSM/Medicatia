@@ -1110,6 +1110,13 @@ function deletePhotoStorage() {
     }); 
 }
 
+function deleteHealthPersonnelAppointments() {
+    firebase.database().ref("Appointments/" + sessionStorage.getItem("id")).remove().then(function () {
+        window.location = "index.jsp";
+    }).catch(function (error) {
+        alert(error);
+    }); 
+}
 function deletePatientAppointments() {
     firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
         snapshot.forEach(function (childX) {
@@ -1162,6 +1169,8 @@ function deleteAccount(){
         if (sessionStorage.getItem("type")==="patient") {
             deleteMedicalHistoryDB();
             deletePatientAppointments();
+        } else if (sessionStorage.getItem("type")==="doctor")  {
+            deleteHealthPersonnelAppointments();
         } else {
             window.location = "index.jsp";
         }
