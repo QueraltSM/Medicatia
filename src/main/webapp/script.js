@@ -454,7 +454,6 @@ function add() {
     } else if (document.getElementById("rol").value === "Nurse") {
         category = document.getElementById("specialties_nurse_selection").value;
     }
-
     firebase.auth().createUserWithEmailAndPassword(email, password).then(function (snapshot) {
         firebase.database().ref('Users/' + snapshot.uid).set({
             dni: dni,
@@ -466,10 +465,11 @@ function add() {
             type: document.getElementById("rol").value.toLowerCase(),
             category: category
         }, function (error) {
-            if (error)
+            if (error) {
                 alert(error);
-            else
+            } else {
                 saveImage(snapshot.uid, "");
+            }
         });
     }).catch(function (error) {
         document.getElementById("email").style.borderColor = "red";
@@ -1101,9 +1101,45 @@ function showNullAppointment(state) {
     document.getElementById("nullAppoinments").innerHTML = "You dont have any " + state + " appointment matched";    
 }
 
+function deletePhotoStorage() {
+    var storageRef = firebase.storage().ref();
+    var storeRef = storageRef.child(sessionStorage.getItem("id") + "/");
+    storeRef.delete().then(function () {
+    }).catch(function (error) {
+        alert(error);
+    }); 
+}
+
+function deletePatientAppointments() {
+    firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            childX.forEach(function (childY) {
+                childY.forEach(function (childZ) {
+                    if (childZ.child("patient").val() === sessionStorage.getItem("id")) {
+                        firebase.database().ref('Appointments/' + childX.key + "/" + childY.key + "/" + childZ.key).set({
+                            state: "free",
+                            type: childZ.child("type").val()
+                        }, function (error) {
+                            if (error)
+                                alert(error);
+                        }); 
+                    }
+                });
+            });
+        });
+        window.location = "index.jsp";
+    });
+}
+
+function deleteMedicalHistoryDB() {
+    firebase.database().ref("MedicalHistory/" + sessionStorage.getItem("id")).remove().then(function () {
+    }).catch(function (error) {
+        alert(error);
+    }); 
+}
+
 function deleteFromDB() {
     firebase.database().ref("Users/" + sessionStorage.getItem("id")).remove().then(function () {
-        deleteFromStorage();
     }).catch(function (error) {
         alert(error);
     });
@@ -1113,7 +1149,6 @@ function deleteFromStorage() {
     var storageRef = firebase.storage().ref();
     var storeRef = storageRef.child(sessionStorage.getItem("id") + ".jpg");
     storeRef.delete().then(function () {
-        window.location = "index.jsp";
     }).catch(function (error) {
         alert(error);
     });
@@ -1122,6 +1157,14 @@ function deleteFromStorage() {
 function deleteAccount(){
     firebase.auth().currentUser.delete().then(function() {
         deleteFromDB();
+        deleteFromStorage();
+        deletePhoto(sessionStorage.getItem("id"));
+        if (sessionStorage.getItem("type")==="patient") {
+            deleteMedicalHistoryDB();
+            deletePatientAppointments();
+        } else {
+            window.location = "index.jsp";
+        }
     }).catch(function(error) {
         alert("Account cannot be permanently deleted");
     });
