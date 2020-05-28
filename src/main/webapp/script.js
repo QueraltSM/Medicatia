@@ -1428,3 +1428,72 @@ function saveIncidence() {
     }
     
 }
+
+function deletePhotoStorage() {
+    var storageRef = firebase.storage().ref();
+    var storeRef = storageRef.child(sessionStorage.getItem("id") + "/");
+    storeRef.delete().then(function () {
+    }).catch(function (error) {
+        alert(error);
+    }); 
+}
+
+function deletePatientAppointments() {
+    firebase.database().ref('Appointments/').once('value').then(function (snapshot) {
+        snapshot.forEach(function (childX) {
+            childX.forEach(function (childY) {
+                childY.forEach(function (childZ) {
+                    if (childZ.child("patient").val() === sessionStorage.getItem("id")) {
+                        firebase.database().ref('Appointments/' + childX.key + "/" + childY.key + "/" + childZ.key).set({
+                            state: "free",
+                            type: childZ.child("type").val()
+                        }, function (error) {
+                            if (error)
+                                alert(error);
+                        }); 
+                    }
+                });
+            });
+        });
+        window.location = "index.jsp";
+    });
+}
+
+function deleteMedicalHistoryDB() {
+    firebase.database().ref("MedicalHistory/" + sessionStorage.getItem("id")).remove().then(function () {
+    }).catch(function (error) {
+        alert(error);
+    }); 
+}
+
+function deleteFromDB() {
+    firebase.database().ref("Users/" + sessionStorage.getItem("id")).remove().then(function () {
+    }).catch(function (error) {
+        alert(error);
+    });
+}
+
+function deleteFromStorage() {
+    var storageRef = firebase.storage().ref();
+    var storeRef = storageRef.child(sessionStorage.getItem("id") + ".jpg");
+    storeRef.delete().then(function () {
+    }).catch(function (error) {
+        alert(error);
+    });
+}
+
+function deleteAccount(){
+    firebase.auth().currentUser.delete().then(function() {
+        deleteFromDB();
+        deleteFromStorage();
+        deletePhoto(sessionStorage.getItem("id"));
+        if (sessionStorage.getItem("type")==="patient") {
+            deleteMedicalHistoryDB();
+            deletePatientAppointments();
+        } else {
+            window.location = "index.jsp";
+        }
+    }).catch(function(error) {
+        alert("Account cannot be permanently deleted");
+    });
+}
