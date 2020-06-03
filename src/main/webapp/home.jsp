@@ -73,8 +73,8 @@
                                     <p class="text-muted mb-0" id="type"></p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" >My Profile</a>
-                            <a class="dropdown-item">Settings</a>
+                            <a class="dropdown-item" hre>My Profile</a>
+                            <a class="dropdown-item" href="settings.jsp">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
                     </li>
@@ -90,7 +90,7 @@
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
                         <ul>
-                            <li class="menu-title">
+                             <li class="menu-title">
                                 <span>Main</span>
                             </li>
                             <li>
@@ -135,7 +135,15 @@
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
                             </li>
-                            
+                            <li id="communicate_incidences_menu_section">
+                                <a href="comunicateIncidence.jsp"><i class="fe fe-comment"></i> <span>Communicate incidence</span></a>
+                            </li>
+                            <li id="all_incidences_menu_section">
+                                <a href="incidences.jsp"><i class="fe fe-bookmark"></i> <span>Incidences</span></a>
+                            </li>
+                            <li>
+                                <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -228,7 +236,7 @@
                                     </div></a>
                             </div>
                         </div>     
-                        
+
                         <div class="col-xl-3 col-sm-6 col-12" id="medical_appointments_section">
                             <div class="card">
                                 <a href="appointments.jsp?t=medical" style="color:black;"><div class="card-body" >
@@ -246,7 +254,7 @@
                                     </div></a>
                             </div>
                         </div>     
-                        
+
                         <div class="col-xl-3 col-sm-6 col-12" id="nursing_appointments_section">
                             <div class="card">
                                 <a href="appointments.jsp?t=nursing" style="color:black;"><div class="card-body" >
@@ -264,8 +272,8 @@
                                     </div></a>
                             </div>
                         </div>  
-                        
-                       
+
+
                         <div class="col-xl-3 col-sm-6 col-12" id="administrators_section">
                             <div class="card">
                                 <a href="administrators.jsp" style="color:black;"><div class="card-body">

@@ -1,7 +1,12 @@
+<%-- 
+    Document   : incidences
+    Created on : 25 may. 2020, 10:54:52
+    Author     : charl
+--%>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
 
@@ -24,17 +29,7 @@
         <link rel="stylesheet" href="assets/css/style.css">
 
     </head>
-    <body onload='getAppointmentsData("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'>
-        <%
-            String search_text = "";
-            if (request.getParameter("type").equals("null") && request.getParameter("state").equals("accepted")) {
-                search_text = "Search accepted appointments pacient";
-            } else if (request.getParameter("type").equals("null") && request.getParameter("state").equals("pending")) {
-                search_text = "Search pending appointments pacient";
-            } else {
-                search_text = "Search by specialist";
-            }
-        %>
+    <body onload='getIncidencesData()'>
 
         <!-- Main Wrapper -->
         <div class="main-wrapper">
@@ -59,8 +54,8 @@
 
                 <div class="top-nav-search">
                     <form>
-                        <input type="text" class="form-control" id="search_appointment" placeholder="<%=search_text%>">
-                        <button class="btn" type="button" onclick='searchAppointments("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-search"></i></button>
+                        <input type="text" class="form-control" placeholder="Search here">
+                        <button class="btn" type="submit"><i class="fa fa-search"></i></button>
                     </form>
                 </div>
 
@@ -87,8 +82,8 @@
                                     <p class="text-muted mb-0" id="type"></p>
                                 </div>
                             </div>
-                            <a class="dropdown-item" >My Profile</a>
-                            <a class="dropdown-item" href="settings.jsp">Settings</a>
+                            <a class="dropdown-item" href="myprofile.jsp">My Profile</a>
+                            <a class="dropdown-item">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
                     </li>
@@ -99,7 +94,7 @@
 
             </div>
             <!-- /Header -->
-            <!-- Sidebar -->
+                       <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -162,7 +157,6 @@
                     </div>
                 </div>
             </div>
-            <!-- /Sidebar -->
             <!-- Page Wrapper -->
             <div class="page-wrapper">
                 <div class="content container-fluid">
@@ -170,7 +164,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col-sm-12">
-                                <h3 class="page-title">My <%=request.getParameter("state")%> appointments</h3>
+                                <h3 class="page-title">All incidences</h3>
                             </div>
                         </div>
                     </div>
@@ -179,26 +173,20 @@
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-body">
-                                    <div style="float: right" class="top-nav-search">
-                                        <form class="top-nav-search">
-                                            <input type="text" class="form-control" placeholder="Search by date" id="search_datepicker">              
-                                            <button class="btn" type="button" onclick='searchAppointmentsByDate("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-calendar"></i></button>
-                                        </form>
-                                    </div><br><br><br><br>
-                                    <div id="nullAppoinments"></div>
-                                    <table class="table table-hover table-center mb-0" id="data">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Time</th>
-                                                <th id="type_of_user">Patient</th>
-                                                <th>Type</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="appointments_table">
-                                        </tbody>
-                                    </table>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover table-center mb-0" id="nullIncidences">
+                                            <thead>
+                                                <tr>
+                                                    <th>Date</th>
+                                                    <th>Time</th>
+                                                    <th>User</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="incidences_table">
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -208,53 +196,20 @@
             <!-- /Page Wrapper -->
         </div>
         <!-- Delete Modal -->
-        <div class="modal fade" id="confirm_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Confirm</h4>
-                            <p class="mb-4">Are you sure want to confirm this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="confirmAppointment()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>  
-
         <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
             <div class="modal-dialog modal-dialog-centered" role="document" >
                 <div class="modal-content">
                     <div class="modal-body">
                         <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="freeAppointment()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            <h4 class="modal-title">Resolved</h4>
+                            <p class="mb-4">Have you resolved the incidence?</p>
+                            <button type="button" class="btn btn-primary" onclick="deleteIncidence()">Yes</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>     
-
-
-        <div class="modal fade" id="reject_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Reject</h4>
-                            <p class="mb-4">Are you sure want to reject this appointment?</p>
-                            <button type="button" class="btn btn-primary" onclick="freeAppointment()">Confirm</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>     
-
-
+        </div>
         <!-- /Delete Modal -->
         <!-- /Main Wrapper -->
         <!-- jQuery -->
@@ -271,15 +226,5 @@
         <script  src="assets/js/script.js"></script>
         <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
         <script src="script.js"></script>
-        <script>
-                                $(function () {
-                                    $("#datepicker").datepicker({
-                                        dateFormat: 'dd/mm/yy'
-                                    });
-                                    $("#search_datepicker").datepicker({
-                                        dateFormat: 'dd/mm/yy'
-                                    });
-                                });
-        </script>
     </body>
 </html>

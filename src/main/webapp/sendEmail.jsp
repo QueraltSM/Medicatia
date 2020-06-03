@@ -1,3 +1,11 @@
+<%-- 
+    Document   : sendEmail
+    Created on : 21 may. 2020, 12:50:19
+    Author     : charl
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -16,7 +24,7 @@
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
     </head>
-    <body onload="setMedicalHistory()">
+    <body onload="setEmailData()">
         <div class="main-wrapper">
             <div class="header">
                 <div class="header-left">
@@ -71,6 +79,9 @@
                             <li id="history_menu_section">
                                 <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
+                            <li id="history_menu_section">
+                                <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
+                            </li>
                             <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
@@ -115,7 +126,7 @@
                     <div class="page-header">
                         <div class="row">
                             <div class="col">
-                                <h3 class="page-title">Medical History</h3>
+                                <h3 class="page-title" id="send_email_name"></h3>
                             </div>
                         </div>
                     </div>
@@ -123,108 +134,25 @@
                         <div class="col-xl-12 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h4 class="card-title">Patient Information</h4>
+                                    <h4 class="card-title">Content of email</h4>
                                 </div>
                                 <div class="card-body">
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">DNI/NIE/NIF</label>
+                                        <label class="col-lg-3 col-form-label">Subject:</label>
                                         <div class="col-lg-9">
-                                            <label id="dni"></label>
+                                            <input type="text" class="form-control" id="subject">
+                                            <div id="errorSubject" class="error_label"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Name</label>
+                                        <label class="col-lg-3 col-form-label">Message:</label>
                                         <div class="col-lg-9">
-                                            <label id="p_name"></label>
+                                            <textarea class="form-control" rows="6" id="message"></textarea>
+                                            <div id="errorMessage" class="error_label"></div>
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Sex</label>
-                                        <div class="col-lg-9">
-                                            <label id="sex"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Race</label>
-                                        <div class="col-lg-9">
-                                            <label id="race"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Birth</label>
-                                        <div class="col-lg-9">
-                                            <label id="birth"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Email</label>
-                                        <div class="col-lg-9">
-                                            <label id="email"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Phone</label>
-                                        <div class="col-lg-9">
-                                            <label id="phone"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Place of birth</label>
-                                        <div class="col-lg-9">
-                                            <label id="p_birth"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Place of residence</label>
-                                        <div class="col-lg-9">
-                                            <label id="p_residence"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Weight</label>
-                                        <div class="col-lg-9">
-                                            <label id="weight"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Height</label>
-                                        <div class="col-lg-9">
-                                            <label id="height"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Marital status</label>
-                                        <div class="col-lg-9">
-                                            <label id="marital_status"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Allergies</label>
-                                        <div class="col-lg-9">
-                                            <label id="allergies"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Disease</label>
-                                        <div class="col-lg-9">
-                                            <label id="diseases"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-lg-3 col-form-label">Recipe prescriptions</label>
-                                        <button onclick="showAllPrescriptions()" type="submit" class="btn btn-primary" id="prescriptions_btn">View</button>
-                                    </div>
-                                    <div class="form-group row" id="all_prescriptions">
-                                        <label class="col-lg-3 col-form-label">All prescriptions</label>
-                                        <div class="col-lg-9">
-                                            <label id="prescriptions_data"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <a href="prescribeMedication.jsp" class="btn btn-primary" id="prescribe">Prescribe medication</a>
-                                    </div>
-                                    <div class="form-group row">
-                                        <a href="editHistory.jsp" class="btn btn-primary" id="editHistory">Edit medical history</a>
+                                        <input type="button" class="btn btn-primary" value="Send" onclick="sendEmail()">
                                     </div>
                                 </div>
                             </div>
