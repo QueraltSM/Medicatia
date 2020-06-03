@@ -472,11 +472,10 @@ function getUsersData(type) {
                     }
                     content += "<td>" + childX.child("phone").val() + "</td>";
 
-                    if (sessionStorage.getItem("type") === "doctor") {
-                        document.getElementById("actions").style.display = "flex";
-                        content += '<td><a class="btn btn-sm bg-info-light" href="#" onclick=storeUIDSelected("' + childX.key + '","send_email")> <i class="fe fe-mail"></i> Send email </a></td>' +
-                                "</tr>";
-                    }
+                    document.getElementById("actions").style.display = "flex";
+                    content += '<td><a class="btn btn-sm bg-info-light" href="#" onclick=storeUIDSelected("' + childX.key + '","send_email")> <i class="fe fe-mail"></i> Send email </a></td>' +
+                            "</tr>";
+
                     if (sessionStorage.getItem("type") === "administrator") {
                         document.getElementById("actions").style.display = "flex";
                         content += '<a class="btn btn-sm bg-primary-light mr-2" onclick=storeUIDSelected("' + childX.key + '","medical_history")> <i class="fe fe-eye"></i> View medical history</a>' + '<a class="btn btn-sm bg-success-light mr-2" onclick=storeUIDSelected("' + childX.key + '","edit")> <i class="fe fe-pencil"></i> Edit</a>' +
@@ -877,6 +876,7 @@ function resetEditAppointmentForm() {
 
 
 function setAppointment(date, time, user, subtype, state) {
+
     firebase.database().ref('Users/' + user).once('value').then(function (snapshot) {
         var content = '<tr><td>' + date + '</td><td>' + time + '</td><td>' + snapshot.child("name").val() + '</td><td>' + subtype + '</td>';
         var name = snapshot.child("name").val();
