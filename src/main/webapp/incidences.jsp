@@ -178,7 +178,6 @@
                                             <thead>
                                                 <tr>
                                                     <th>Date</th>
-                                                    <th>Time</th>
                                                     <th>User</th>
                                                     <th>Actions</th>
                                                 </tr>

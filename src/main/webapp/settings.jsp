@@ -1,9 +1,3 @@
-<%-- 
-    Document   : settings
-    Created on : 25 may. 2020, 9:28:44
-    Author     : charl
---%>
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -27,7 +21,7 @@
 
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
-
+        
         <!--[if lt IE 9]>
                 <script src="assets/js/html5shiv.min.js"></script>
                 <script src="assets/js/respond.min.js"></script>
@@ -83,7 +77,7 @@
                                 </div>
                             </div>
                             <a class="dropdown-item" href="myprofile.jsp">My Profile</a>
-                            <a class="dropdown-item" href="settings.jsp">Settings</a>
+                            <a class="dropdown-item">Settings</a>
                             <a class="dropdown-item" href="javascript:logout()">Logout</a>
                         </div>
                     </li>
@@ -94,7 +88,7 @@
 
             </div>
             <!-- /Header -->
-            <!-- Sidebar -->
+                       <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -111,28 +105,28 @@
                             <li id="history_menu_section">
                                 <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
-                            <li class="has-submenu" id="appointments_menu_section">
+                           <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu"  id="medical_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu" id="nursing_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li id="administrators_menu_section">
+                           </li>
+                           <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -143,6 +137,12 @@
                             </li>
                             <li id="patients_menu_section">
                                 <a href="patients.jsp"><i class="fe fe-user"></i> <span>Patients</span></a>
+                            </li>
+                            <li id="communicate_incidences_menu_section">
+                                <a href="comunicateIncidence.jsp"><i class="fe fe-comment"></i> <span>Communicate incidence</span></a>
+                            </li>
+                            <li id="all_incidences_menu_section">
+                                <a href="incidences.jsp"><i class="fe fe-bookmark"></i> <span>Incidences</span></a>
                             </li>
                             <li>
                                 <a href="settings.jsp"><i class="fe fe-notice-push"></i> <span>Settings</span></a>
@@ -168,13 +168,13 @@
                         <div class="col-xl-12 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h4 class="card-title">Set notification settings</h4>
+                                    <h4 class="card-title">Alert appointment</h4>
                                 </div>
                                 <div class="card-body">
                                     <input type="checkbox" id="alert_notifications" onclick="toggleNotifications()" data-toggle="toggle" data-size="mini"> Alert notifications
-
-                                    <form onsubmit="changeNotificationTime();
-                                            return false">
+                    
+                                    <form onsubmit="changeNotificationTime(); 
+                                        return false">
                                         <div class="form-group row" id="Rol">
                                             <label class="col-lg-3 col-form-label">Reminder time: </label>
                                             <div class="col-lg-9">

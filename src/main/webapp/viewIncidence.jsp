@@ -3,34 +3,24 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
         <title>Medicatia</title>
-
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-
         <!-- Fontawesome CSS -->
         <link rel="stylesheet" href="assets/css/font-awesome.min.css">
-
         <!-- Feathericon CSS -->
         <link rel="stylesheet" href="assets/css/feathericon.min.css">
-
-        <!-- Datatables CSS -->
-        <link rel="stylesheet" href="assets/plugins/datatables/datatables.min.css">
-
+        <!-- Select2 CSS -->
+        <link rel="stylesheet" href="assets/css/select2.min.css">
         <!-- Main CSS -->
         <link rel="stylesheet" href="assets/css/style.css">
-
     </head>
-    <body onload='getAppointmentsData("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'>
-
+    <body onload="getIncidenceData()">
         <!-- Main Wrapper -->
         <div class="main-wrapper">
-
             <!-- Header -->
             <div class="header">
-
                 <!-- Logo -->
                 <div class="header-left">
                     <a href="home.jsp" class="logo">
@@ -41,25 +31,13 @@
                     </a>
                 </div>
                 <!-- /Logo -->
-
                 <a href="javascript:void(0);" id="toggle_btn">
                     <i class="fe fe-text-align-left"></i>
                 </a>
-
-                <div class="top-nav-search">
-                    <form>
-                        <input type="text" class="form-control" id="search_appointment">
-                        <button class="btn" type="button" onclick='searchAppointmentsByUser("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-search"></i></button>
-                    </form>
-                </div>
-
                 <!-- Mobile Menu Toggle -->
                 <a class="mobile_btn" id="mobile_btn">
                     <i class="fa fa-bars"></i>
                 </a>
-                <!-- /Mobile Menu Toggle -->
-
-                <!-- Header Right Menu -->
                 <ul class="nav user-menu">
                     <!-- User Menu -->
                     <li class="nav-item dropdown has-arrow">
@@ -82,13 +60,11 @@
                         </div>
                     </li>
                     <!-- /User Menu -->
-
                 </ul>
                 <!-- /Header Right Menu -->
-
             </div>
             <!-- /Header -->
-            <!-- Sidebar -->
+                       <!-- Sidebar -->
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
                     <div id="sidebar-menu" class="sidebar-menu">
@@ -105,28 +81,28 @@
                             <li id="history_menu_section">
                                 <a href="history.jsp"><i class="fe fe-file"></i> <span>Medical History</span></a>
                             </li>
-                            <li class="has-submenu" id="appointments_menu_section">
+                           <li class="has-submenu" id="appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=null&table=Patient">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=null&table=Patient">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu"  id="medical_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu"  id="medical_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Medical appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=medical&table=Doctor">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=medical&table=Doctor">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li class="has-submenu" id="nursing_appointments_menu_section">
+                           </li>
+                           <li class="has-submenu" id="nursing_appointments_menu_section">
                                 <a href="#"><i class="fe fe-calendar" aria-hidden="true"></i> <span>Nursing appointments</span></a>
                                 <ul class="submenu">
                                     <li><a href="myappointments.jsp?state=accepted&type=nursing&table=Nurse">Accepted</a></li>
                                     <li><a href="myappointments.jsp?state=pending&type=nursing&table=Nurse">Pending</a></li>
                                 </ul>
-                            </li>
-                            <li id="administrators_menu_section">
+                           </li>
+                           <li id="administrators_menu_section">
                                 <a href="administrators.jsp"><i class="fe fe-user"></i> <span>Administrators</span></a>
                             </li>
                             <li id="doctors_menu_section">
@@ -157,35 +133,29 @@
                     <!-- Page Header -->
                     <div class="page-header">
                         <div class="row">
-                            <div class="col-sm-12">
-                                <h3 class="page-title">My <%=request.getParameter("state")%> appointments</h3>
+                            <div class="col">
+                                <h3 class="page-title">Incidence</h3>
+                                <p id="incidence_datetime"></p>
                             </div>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-sm-12">
-                            <div class="card">
+                        <div class="col-xl-12 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h4 class="card-title" id="patient_name"></h4>
+                                </div>
                                 <div class="card-body">
-                                    <div style="float: right" class="top-nav-search">
-                                        <form class="top-nav-search">
-                                            <input type="text" class="form-control" placeholder="Search by date" id="search_datepicker">              
-                                            <button class="btn" type="button" onclick='searchAppointmentsByDate("<%=request.getParameter("state")%>", "<%=request.getParameter("type")%>")'><i class="fa fa-calendar"></i></button>
-                                        </form>
-                                    </div><br><br><br><br>
-                                    <div id="nullAppoinments"></div>
-                                    <table class="table table-hover table-center mb-0" id="data">
-                                        <thead>
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Time</th>
-                                                <th id="type_of_user">Patient</th>
-                                                <th>Type</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="appointments_table">
-                                        </tbody>
-                                    </table>
+                                    <form onsubmit="deleteIncidence(); return false">
+                                        <div class="form-group row">
+                                            <div class="col-lg-10">
+                                                <p class="form-control" id="incidence_information"></p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <button type="submit" class="btn btn-primary">Resolve</button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -193,51 +163,17 @@
                 </div>
             </div>
         </div>
-        <!-- /Page Wrapper -->
-        <!-- Delete Modal -->
-        <div class="modal fade" id="delete_modal" aria-hidden="true" role="dialog">
-            <div class="modal-dialog modal-dialog-centered" role="document" >
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="form-content p-2">
-                            <h4 class="modal-title">Delete</h4>
-                            <p class="mb-4">Are you sure want to delete?</p>
-                            <button type="button" class="btn btn-primary" onclick="deleteUser()">Save</button>
-                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- /Delete Modal -->
-        <!-- /Main Wrapper -->
-        <!-- jQuery -->
         <script src="assets/js/jquery-3.2.1.min.js"></script>
         <!-- Bootstrap Core JS -->
         <script src="assets/js/popper.min.js"></script>
         <script src="assets/js/bootstrap.min.js"></script>
         <!-- Slimscroll JS -->
         <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js"></script>
-        <!-- Datatables JS -->
-        <script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="assets/plugins/datatables/datatables.min.js"></script>
+        <!-- Select2 JS -->
+        <script src="assets/js/select2.min.js"></script>
         <!-- Custom JS -->
         <script  src="assets/js/script.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase.js"></script>
         <script src="script.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/resources/demos/style.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-        <script>
-                                $(function () {
-                                    $("#datepicker").datepicker({
-                                        dateFormat: 'dd/mm/yy'
-                                    });
-                                    $("#search_datepicker").datepicker({
-                                        dateFormat: 'dd/mm/yy'
-                                    });
-                                });
-        </script>
     </body>
 </html>
