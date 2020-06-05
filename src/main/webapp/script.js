@@ -1202,7 +1202,45 @@ function checkNotifications() {
 }
 
 function checkPatientNotifications() {
-    // Oliver's code
+    
+    var day = ("0" + (new Date().getDate())).slice(-2);
+    var month = ("0" + (new Date().getMonth() + 1)).slice(-2);
+    var today = day + "/" + month + "/" + new Date().getFullYear();
+    var date1 = today + " " + ("0" + (new Date().getHours())).slice(-2) + ":" + ("0" + (new Date().getMinutes())).slice(-2);
+    firebase.database().ref('Appointments/' + sessionStorage.getItem("id")).once('value').then(function (snapshot) {
+            snapshot.forEach(function (childX) {
+                var appointment_date = childX.key.split("-").join("/");
+                if (today === appointment_date) {
+                    childX.forEach(function (snapshotChild) {
+                        if (snapshotChild.child("state").val() === "accepted") {
+                            var hour_date = snapshotChild.key;
+                            var hour = hour_date.substring(0, hour_date.indexOf("-"));
+                            var date2 = appointment_date + " " + hour;
+                            if (date2 > date1) {
+                                var date3 = new Date();
+                                date3.setHours(hour.substring(0, hour.indexOf(":")));
+                                date3.setMinutes(hour.substring(hour.indexOf(":") + 1, hour.length));
+                                var alert_time = sessionStorage.getItem("alert_time");
+                                alert_time = alert_time.substring(0, alert_time.indexOf(" "));
+                                var before_time = date3.setMinutes(date3.getMinutes() - alert_time);
+                                if (alert_time <= 3) {
+                                    before_time = date3.setHours(date3.getHours() - alert_time);
+                                }
+                                var date4 = new Date(before_time);
+                                var time_date4 = ("0" + (date4.getHours())).slice(-2) + ":" + ("0" + (date4.getMinutes())).slice(-2);
+                                var time_now = ("0" + (new Date().getHours())).slice(-2) + ":" + ("0" + (new Date().getMinutes())).slice(-2);
+                                if (time_date4 === time_now) {
+                                    showAlert();
+                                } else {
+                                    sessionStorage.getItem("first_time", null);
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+          
 }
 
 
@@ -1284,7 +1322,7 @@ function searchAppointmentsByDate(state, type) {
 }
 
 function searchAppointmentsByPatient(state, type) {
-    alert("searchAppointmentsByPatient");
+    //alert("searchAppointmentsByPatient");
     $("#appointments_table").empty();
     document.getElementById("nullAppoinments").style.display = "none";
     document.getElementById("data").style.display = "table";
